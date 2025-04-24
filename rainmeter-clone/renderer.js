@@ -4,6 +4,8 @@ const Chart = require('chart.js/auto'); // Import Chart.js
 const { fetchHistoricalData } = require('./dataFetcher');
 const { renderChart } = require('./chartRenderer');
 
+let chartInstance; // Global variable to store the chart instance
+
 async function updateUI() {
     const stockSelect = document.getElementById('stock-select');
     const currencySelect = document.getElementById('currency-select');
@@ -11,7 +13,7 @@ async function updateUI() {
     const currency = currencySelect.value;
     const days = 7; // Example period (last 7 days)
 
-    const data = await fetchHistoricalData(ticker, days);
+    const data = await fetchHistoricalData(ticker, days, currency); // Pass currency parameter
     if (!data) return;
 
     // Update current price
@@ -24,7 +26,10 @@ async function updateUI() {
 
     // Render the chart
     const ctx = document.getElementById('chart').getContext('2d');
-    renderChart(ctx, `${ticker} (${currency.toUpperCase()})`, labels, prices);
+    if (chartInstance) {
+        chartInstance.destroy(); // Destroy the existing chart instance
+    }
+    chartInstance = renderChart(ctx, `${ticker} (${currency.toUpperCase()})`, labels, prices);
 }
 
 // Add event listeners for dropdown changes

@@ -1,12 +1,12 @@
 const Chart = require('chart.js/auto');
 
 function renderChart(ctx, ticker, labels, prices) {
-    new Chart(ctx, {
+    return new Chart(ctx, { // Return the chart instance
         type: 'line',
         data: {
             labels,
             datasets: [{
-                label: `${ticker.toUpperCase()} Price (USD)`,
+                label: ticker.toUpperCase(),
                 data: prices,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 2,
@@ -25,3 +25,4 @@ function renderChart(ctx, ticker, labels, prices) {
 }
 
 module.exports = { renderChart };
+
