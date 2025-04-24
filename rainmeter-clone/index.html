@@ -13,10 +13,89 @@
                 width: 100%;
                 height: 400px;
             }
+            #selectors {
+                margin-bottom: 20px;
+            }
+            select {
+                margin-right: 10px;
+            }
         </style>
     </head>
     <body>
         <h1>Crypto Tracker</h1>
+        <div id="selectors">
+            <label for="stock-select">Stock:</label>
+            <select id="stock-select">
+                <option value="bitcoin">Bitcoin</option>
+                <option value="ethereum">Ethereum</option>
+                <option value="dogecoin">Dogecoin</option>
+            </select>
+            <label for="currency-select">Currency:</label>
+            <select id="currency-select">
+                <option value="usd">US Dollar (USD)</option>
+                <option value="btc">Bitcoin (BTC)</option>
+                <option value="eth">Ethereum (ETH)</option>
+                <option value="ltc">Litecoin (LTC)</option>
+                <option value="bch">Bitcoin Cash (BCH)</option>
+                <option value="bnb">Binance Coin (BNB)</option>
+                <option value="eos">EOS (EOS)</option>
+                <option value="xrp">Ripple (XRP)</option>
+                <option value="xlm">Stellar (XLM)</option>
+                <option value="link">Chainlink (LINK)</option>
+                <option value="dot">Polkadot (DOT)</option>
+                <option value="yfi">Yearn.Finance (YFI)</option>
+                <option value="aed">UAE Dirham (AED)</option>
+                <option value="ars">Argentine Peso (ARS)</option>
+                <option value="aud">Australian Dollar (AUD)</option>
+                <option value="bdt">Bangladeshi Taka (BDT)</option>
+                <option value="bhd">Bahraini Dinar (BHD)</option>
+                <option value="bmd">Bermudian Dollar (BMD)</option>
+                <option value="brl">Brazilian Real (BRL)</option>
+                <option value="cad">Canadian Dollar (CAD)</option>
+                <option value="chf">Swiss Franc (CHF)</option>
+                <option value="clp">Chilean Peso (CLP)</option>
+                <option value="cny">Chinese Yuan (CNY)</option>
+                <option value="czk">Czech Koruna (CZK)</option>
+                <option value="dkk">Danish Krone (DKK)</option>
+                <option value="eur">Euro (EUR)</option>
+                <option value="gbp">British Pound (GBP)</option>
+                <option value="gel">Georgian Lari (GEL)</option>
+                <option value="hkd">Hong Kong Dollar (HKD)</option>
+                <option value="huf">Hungarian Forint (HUF)</option>
+                <option value="idr">Indonesian Rupiah (IDR)</option>
+                <option value="ils">Israeli Shekel (ILS)</option>
+                <option value="inr">Indian Rupee (INR)</option>
+                <option value="jpy">Japanese Yen (JPY)</option>
+                <option value="krw">South Korean Won (KRW)</option>
+                <option value="kwd">Kuwaiti Dinar (KWD)</option>
+                <option value="lkr">Sri Lankan Rupee (LKR)</option>
+                <option value="mmk">Myanmar Kyat (MMK)</option>
+                <option value="mxn">Mexican Peso (MXN)</option>
+                <option value="myr">Malaysian Ringgit (MYR)</option>
+                <option value="ngn">Nigerian Naira (NGN)</option>
+                <option value="nok">Norwegian Krone (NOK)</option>
+                <option value="nzd">New Zealand Dollar (NZD)</option>
+                <option value="php">Philippine Peso (PHP)</option>
+                <option value="pkr">Pakistani Rupee (PKR)</option>
+                <option value="pln">Polish Zloty (PLN)</option>
+                <option value="rub">Russian Ruble (RUB)</option>
+                <option value="sar">Saudi Riyal (SAR)</option>
+                <option value="sek">Swedish Krona (SEK)</option>
+                <option value="sgd">Singapore Dollar (SGD)</option>
+                <option value="thb">Thai Baht (THB)</option>
+                <option value="try">Turkish Lira (TRY)</option>
+                <option value="twd">Taiwan Dollar (TWD)</option>
+                <option value="uah">Ukrainian Hryvnia (UAH)</option>
+                <option value="vef">Venezuelan Bolívar (VEF)</option>
+                <option value="vnd">Vietnamese Dong (VND)</option>
+                <option value="zar">South African Rand (ZAR)</option>
+                <option value="xdr">IMF Special Drawing Rights (XDR)</option>
+                <option value="xag">Silver (XAG)</option>
+                <option value="xau">Gold (XAU)</option>
+                <option value="bits">Bits (BITS)</option>
+                <option value="sats">Satoshis (SATS)</option>
+            </select>
+        </div>
         <div id="price">Current Price: $<span id="current-price">0.00</span></div>
         <canvas id="chart"></canvas>
         <script src="renderer.js"></script>

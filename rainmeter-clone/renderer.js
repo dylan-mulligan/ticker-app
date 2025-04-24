@@ -5,7 +5,10 @@ const { fetchHistoricalData } = require('./dataFetcher');
 const { renderChart } = require('./chartRenderer');
 
 async function updateUI() {
-    const ticker = 'bitcoin'; // Example ticker
+    const stockSelect = document.getElementById('stock-select');
+    const currencySelect = document.getElementById('currency-select');
+    const ticker = stockSelect.value;
+    const currency = currencySelect.value;
     const days = 7; // Example period (last 7 days)
 
     const data = await fetchHistoricalData(ticker, days);
@@ -21,8 +24,13 @@ async function updateUI() {
 
     // Render the chart
     const ctx = document.getElementById('chart').getContext('2d');
-    renderChart(ctx, ticker, labels, prices);
+    renderChart(ctx, `${ticker} (${currency.toUpperCase()})`, labels, prices);
 }
+
+// Add event listeners for dropdown changes
+document.getElementById('stock-select').addEventListener('change', updateUI);
+document.getElementById('currency-select').addEventListener('change', updateUI);
 
 // Initialize the UI
 updateUI();
+

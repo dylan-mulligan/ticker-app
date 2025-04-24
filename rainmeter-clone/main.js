@@ -25,12 +25,12 @@ function createWindow() {
 app.whenReady().then(createWindow);
 
 // Handle API requests from the renderer process
-ipcMain.handle('fetch-historical-data', async (event, { ticker, days }) => {
+ipcMain.handle('fetch-historical-data', async (event, { ticker, days, currency = 'usd' }) => {
     try {
+        console.log(currency);
         const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${ticker}/market_chart`, {
-            params: { vs_currency: 'usd', days }
+            params: { vs_currency: currency, days }
         });
-        console.dir(response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -49,3 +49,4 @@ app.on('activate', () => {
         createWindow();
     }
 });
+
