@@ -8,7 +8,7 @@ interface TickerChartContainerProps {
   ticker: string;
   currency: string;
   fetchData: boolean;
-  delay: number; // New prop for delay
+  delay: number;
 }
 
 const TickerChartContainer: React.FC<TickerChartContainerProps> = ({ ticker, currency, fetchData, delay }) => {
@@ -42,12 +42,24 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({ ticker, cur
       fetchDataAsync();
     }, delay);
 
-    return () => clearTimeout(timeoutId); // Cleanup timeout on unmount
+    return () => clearTimeout(timeoutId);
   }, [ticker, currency, fetchData, delay]);
 
   return (
-    <Box id={`chart-container-${ticker}`} sx={{ mb: 4 }}>
-      <PriceDisplay ticker={ticker} currentPrice={currentPrice} />
+    <Box
+      id={`chart-container-${ticker}`}
+      sx={{
+        border: '1px solid #ccc',
+        borderRadius: '8px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        p: 3,
+        maxWidth: 600,
+        ml: 4,
+        mr: 4,
+        width: '500px'
+      }}
+    >
+      <PriceDisplay ticker={ticker} currentPrice={currentPrice} currency={currency} />
       <Chart ticker={ticker} currency={currency} labels={labels} prices={prices} />
     </Box>
   );

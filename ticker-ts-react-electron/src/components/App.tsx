@@ -46,7 +46,7 @@ function App() {
             label="Dogecoin"
           />
         </FormGroup>
-        <Box>
+        <Box sx={{gap: 2, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
           {selectedTickers.map((ticker, index) => (
             <TickerChartContainer
               key={ticker}
