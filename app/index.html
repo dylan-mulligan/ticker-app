@@ -24,12 +24,12 @@
     <body>
         <h1>Crypto Tracker</h1>
         <div id="selectors">
-            <label for="stock-select">Stock:</label>
-            <select id="stock-select">
-                <option value="bitcoin">Bitcoin</option>
-                <option value="ethereum">Ethereum</option>
-                <option value="dogecoin">Dogecoin</option>
-            </select>
+            <fieldset>
+                <legend>Stocks:</legend>
+                <label><input type="checkbox" class="stock-checkbox" value="bitcoin"> Bitcoin</label>
+                <label><input type="checkbox" class="stock-checkbox" value="ethereum"> Ethereum</label>
+                <label><input type="checkbox" class="stock-checkbox" value="dogecoin"> Dogecoin</label>
+            </fieldset>
             <label for="currency-select">Currency:</label>
             <select id="currency-select">
                 <option value="usd">US Dollar (USD)</option>
@@ -96,8 +96,6 @@
                 <option value="sats">Satoshis (SATS)</option>
             </select>
         </div>
-        <div id="price">Current Price: $<span id="current-price">0.00</span></div>
-        <canvas id="chart"></canvas>
         <script src="renderer.js"></script>
     </body>
 </html>

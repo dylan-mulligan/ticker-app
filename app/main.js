@@ -4,7 +4,7 @@ import axios from 'axios';
 import fs from 'fs'; // Import fs for reading the mock file
 
 let mainWindow;
-const isMockMode = false; // Check if mock mode is enabled
+const isMockMode = true; // Check if mock mode is enabled
 const boundsFile = path.join(app.getPath('userData'), 'windowBounds.json'); // File to store window bounds
 
 function saveWindowBounds() {
@@ -55,12 +55,11 @@ app.whenReady().then(createWindow);
 ipcMain.handle('fetch-historical-data', async (event, { ticker, days, currency = 'usd' }) => {
     if (isMockMode) {
         try {
-            const mockFileName = `mockResponse_${currency}.json`; // Use currency-specific mock file
+            const mockFileName = `mockData/mock_${ticker.toLowerCase()}_${currency}.json`; // Updated mock file naming convention
             const mockData = JSON.parse(fs.readFileSync(mockFileName, 'utf-8')); // Read mock response
-            console.dir(currency);
             return mockData;
         } catch (error) {
-            console.error(`Error reading mock response for currency ${currency}:`, error);
+            console.error(`Error reading mock response for ${ticker} in ${currency}:`, error);
             throw error;
         }
     } else {
@@ -68,7 +67,6 @@ ipcMain.handle('fetch-historical-data', async (event, { ticker, days, currency =
             const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${ticker}/market_chart`, {
                 params: { vs_currency: currency, days }
             });
-            console.dir(response.data);
             return response.data;
         } catch (error) {
             console.error('Error fetching data:', error);
