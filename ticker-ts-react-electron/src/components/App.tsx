@@ -1,38 +1,62 @@
 import React, { useState } from 'react';
-import { Box, Typography, Select, MenuItem } from '@mui/material';
+import { Box, Typography, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import TickerChartContainer from './TickerChartContainer';
+import NavBar from './NavBar';
 
 function App() {
   const [currency, setCurrency] = useState('usd');
-  const tickers = ['bitcoin'];
+  const [selectedTickers, setSelectedTickers] = useState<string[]>(['bitcoin']);
+
+  const handleTickerChange = (ticker: string) => {
+    setSelectedTickers((prev) =>
+      prev.includes(ticker) ? prev.filter((t) => t !== ticker) : [...prev, ticker]
+    );
+  };
 
   return (
-    <Box sx={{ textAlign: 'center', p: 2 }}>
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h5" component="h1" gutterBottom>
-          Ticker App
-        </Typography>
-      </Box>
-      <Box sx={{ mb: 2 }}>
-        <Select
-          id="currency-select"
-          value={currency}
-          onChange={(e) => setCurrency(e.target.value)}
-          sx={{ minWidth: 120 }}
-        >
-          <MenuItem value="usd">USD</MenuItem>
-          <MenuItem value="eur">EUR</MenuItem>
-        </Select>
-      </Box>
-      <Box>
-        {tickers.map((ticker, index) => (
-          <TickerChartContainer
-            key={ticker}
-            ticker={ticker}
-            currency={currency}
-            fetchData={index === 0} // Only the first chart fetches data
+    <Box>
+      <NavBar currency={currency} setCurrency={setCurrency} />
+      <Box sx={{ textAlign: 'center', p: 2 }}>
+        <FormGroup row sx={{ justifyContent: 'center', mb: 2 }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={selectedTickers.includes('bitcoin')}
+                onChange={() => handleTickerChange('bitcoin')}
+              />
+            }
+            label="Bitcoin"
           />
-        ))}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={selectedTickers.includes('ethereum')}
+                onChange={() => handleTickerChange('ethereum')}
+              />
+            }
+            label="Ethereum"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={selectedTickers.includes('dogecoin')}
+                onChange={() => handleTickerChange('dogecoin')}
+              />
+            }
+            label="Dogecoin"
+          />
+        </FormGroup>
+        <Box>
+          {selectedTickers.map((ticker, index) => (
+            <TickerChartContainer
+              key={ticker}
+              ticker={ticker}
+              currency={currency}
+              fetchData={true} // All charts fetch data
+              delay={index * 2000} // Introduce a delay for subsequent charts
+            />
+          ))}
+        </Box>
       </Box>
     </Box>
   );
