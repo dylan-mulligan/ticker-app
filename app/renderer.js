@@ -1,6 +1,3 @@
-const { ipcRenderer } = require('electron');
-const Chart = require('chart.js/auto'); // Import Chart.js
-
 const { fetchHistoricalData } = require('./dataFetcher');
 const { renderChart } = require('./chartRenderer');
 
