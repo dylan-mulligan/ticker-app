@@ -5,11 +5,33 @@ import fs from 'fs'; // Import fs for reading the mock file
 
 let mainWindow;
 const isMockMode = false; // Check if mock mode is enabled
+const boundsFile = path.join(app.getPath('userData'), 'windowBounds.json'); // File to store window bounds
+
+function saveWindowBounds() {
+    if (mainWindow) {
+        const bounds = mainWindow.getBounds();
+        fs.writeFileSync(boundsFile, JSON.stringify(bounds), 'utf-8');
+    }
+}
+
+function loadWindowBounds() {
+    try {
+        if (fs.existsSync(boundsFile)) {
+            return JSON.parse(fs.readFileSync(boundsFile, 'utf-8'));
+        }
+    } catch (error) {
+        console.error('Error loading window bounds:', error);
+    }
+    return { width: 800, height: 600 }; // Default size
+}
 
 function createWindow() {
+    const { width, height, x, y } = loadWindowBounds(); // Load saved bounds
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width,
+        height,
+        x,
+        y,
         titleBarStyle: 'default',
         webPreferences: {
             nodeIntegration: true, // Enable Node.js integration
@@ -19,6 +41,9 @@ function createWindow() {
 
     mainWindow.loadFile('index.html');
 
+    mainWindow.on('resized', saveWindowBounds); // Save bounds on window moved
+    mainWindow.on('moved', saveWindowBounds); // Save bounds on window moved
+    mainWindow.on('close', saveWindowBounds); // Save bounds on close
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
@@ -63,4 +88,3 @@ app.on('activate', () => {
         createWindow();
     }
 });
-
