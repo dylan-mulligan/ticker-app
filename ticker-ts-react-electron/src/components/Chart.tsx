@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import ChartJS from 'chart.js/auto';
+import React from 'react';
+import { Box } from '@mui/material';
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 interface ChartProps {
   ticker: string;
@@ -9,46 +10,24 @@ interface ChartProps {
 }
 
 const Chart: React.FC<ChartProps> = ({ ticker, currency, labels, prices }) => {
-  const chartRef = useRef<HTMLCanvasElement>(null);
-  const chartInstanceRef = useRef<ChartJS | null>(null);
+  const data = labels.map((label, index) => ({
+    date: label,
+    price: prices[index],
+  }));
 
-  useEffect(() => {
-    if (chartRef.current) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
-      chartInstanceRef.current = new ChartJS(chartRef.current, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [
-            {
-              label: `${ticker.toUpperCase()} (${currency.toUpperCase()})`,
-              data: prices,
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 2,
-              fill: false,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              display: true,
-            },
-          },
-        },
-      });
-    }
-    return () => {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
-    };
-  }, [ticker, currency, labels, prices]);
-
-  return <canvas ref={chartRef} width="400" height="200"></canvas>;
+  return (
+    <Box sx={{ width: '100%', height: 300 }}>
+      <ResponsiveContainer>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis domain={['auto', 'auto']} />
+          <Tooltip />
+          <Line type="monotone" dataKey="price" stroke="#4bc0c0" strokeWidth={2} />
+        </LineChart>
+      </ResponsiveContainer>
+    </Box>
+  );
 };
 
 export default Chart;
