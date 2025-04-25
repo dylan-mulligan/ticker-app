@@ -1,5 +1,5 @@
-const { fetchHistoricalData } = require('./dataFetcher');
-const { renderChart } = require('./chartRenderer');
+const { fetchHistoricalData } = require('./src/dataFetcher');
+const { renderChart } = require('./src/chartRenderer');
 
 const charts = {}; // Object to store chart instances by ticker
 
