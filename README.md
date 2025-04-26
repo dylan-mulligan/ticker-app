@@ -1,6 +1,6 @@
-# Ticker TS React Electron
+# Ticker App Project
 
-Ticker TS React Electron is a desktop application built with React, TypeScript, and Electron. It provides real-time cryptocurrency and stock price tracking with interactive charts and a customizable user interface.
+This project is a crypto/stock ticker application built with React, TypeScript, and Electron. It provides real-time cryptocurrency and stock price tracking with interactive charts and a customizable user interface. React + Electron allow for a unified web and desktop app, with plans to implement a React Native component for mobile support. The goal of this project is mainly to learn more about integrating these technologies, as well as trying to implement technically interesting funcationality. One goal in particular is to mimic some of the functionality of [Rainmeter](https://www.rainmeter.net) with floating desktop ticker widgets (via Electron).
 
 ## Features
 
