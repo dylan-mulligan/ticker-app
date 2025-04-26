@@ -49,6 +49,8 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
     localStorage.setItem('darkMode', newDarkMode.toString()); // Save to localStorage
   };
 
+  if (isElectron) return null; // Do not render in Electron
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -98,4 +100,3 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
 };
 
 export default NavBar;
-

@@ -3,6 +3,7 @@ import { Box, CssBaseline, createTheme, ThemeProvider } from '@mui/material';
 import TickerChartContainer from './TickerChartContainer';
 import NavBar from './NavBar';
 import ChartSelectionBox from './ChartSelectionBox';
+import CustomToolbar from './CustomToolbar';
 
 function App() {
   // State for selected currency
@@ -85,6 +86,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box>
+        <CustomToolbar /> {/* Add the custom toolbar */}
         <NavBar
           currency={currency}
           setCurrency={setCurrency}
@@ -125,3 +127,4 @@ function App() {
 }
 
 export default App;
+

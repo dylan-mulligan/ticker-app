@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, contextBridge } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -31,7 +31,8 @@ function createWindow() {
         height,
         x,
         y,
-        titleBarStyle: 'default',
+        frame: false, // Disable the window frame
+        titleBarStyle: 'hidden', // Hide the default title bar
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'), // Ensure preload script is correctly set
             contextIsolation: true, // Ensure context isolation is enabled
