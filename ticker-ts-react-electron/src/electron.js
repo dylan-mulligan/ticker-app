@@ -64,6 +64,28 @@ function createWindow() {
             mainWindow.setAlwaysOnTop(isAlwaysOnTop); // Apply initial state
         }
     });
+
+    ipcMain.on('minimize-window', () => {
+        if (mainWindow) {
+            mainWindow.minimize();
+        }
+    });
+
+    ipcMain.on('maximize-window', () => {
+        if (mainWindow) {
+            if (mainWindow.isMaximized()) {
+                mainWindow.unmaximize();
+            } else {
+                mainWindow.maximize();
+            }
+        }
+    });
+
+    ipcMain.on('close-window', () => {
+        if (mainWindow) {
+            mainWindow.close();
+        }
+    });
 }
 
 app.whenReady().then(createWindow);
@@ -79,4 +101,3 @@ app.on('activate', () => {
         createWindow();
     }
 });
-
