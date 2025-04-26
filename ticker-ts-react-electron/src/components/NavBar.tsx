@@ -1,14 +1,16 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Select, MenuItem, Box } from '@mui/material';
-import { ShowChart } from '@mui/icons-material'; // Import the stock logo icon
+import { AppBar, Toolbar, Typography, Select, MenuItem, Box, IconButton } from '@mui/material';
+import { ShowChart, Brightness4, Brightness7 } from '@mui/icons-material'; // Import icons
 import { currencyIconMap } from '../utils/currencyIconMap'; // Import the map
 
 interface NavBarProps {
   currency: string;
   setCurrency: (currency: string) => void;
+  darkMode: boolean; // Add dark mode prop
+  setDarkMode: (mode: boolean) => void; // Add dark mode setter prop
 }
 
-const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency }) => {
+const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDarkMode }) => {
   return (
     <AppBar position="static">
       <Toolbar>
@@ -16,7 +18,8 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency }) => {
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
           Ticker App
         </Typography>
-        <Box>
+
+        <Box sx={{gap: 2, display: 'flex', alignItems: 'center' }}>
           <Select
             id="currency-select-navbar"
             value={currency}
@@ -36,6 +39,12 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency }) => {
               </MenuItem>
             ))}
           </Select>
+          <IconButton
+            sx={{ color: 'white' }}
+            onClick={() => setDarkMode(!darkMode)} // Toggle dark mode
+          >
+            {darkMode ? <Brightness7 /> : <Brightness4 />} {/* Switch icons */}
+          </IconButton>
         </Box>
       </Toolbar>
     </AppBar>
@@ -43,3 +52,4 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency }) => {
 };
 
 export default NavBar;
+

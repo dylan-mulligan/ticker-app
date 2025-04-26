@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography, FormGroup, IconButton, Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { FormControlLabel, Checkbox } from '@mui/material';
+import { BarChart } from '@mui/icons-material'; // Added import for BarChart icon
 
 interface ChartSelectionBoxProps {
   selectedTickers: string[];
@@ -35,7 +36,10 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6">Chart Selection</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <BarChart sx={{ mr: 1 }} /> {/* Added BarChart icon */}
+          <Typography variant="h6">Chart Selection</Typography>
+        </Box>
         <IconButton onClick={toggleSelectionBox}>
           {isSelectionBoxOpen ? <ExpandLess /> : <ExpandMore />}
         </IconButton>
@@ -77,3 +81,4 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
 };
 
 export default ChartSelectionBox;
+
