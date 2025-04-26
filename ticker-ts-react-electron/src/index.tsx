@@ -33,7 +33,7 @@ if (ticker && currency && chartType) {
           ticker={ticker}
           currency={currency}
           fetchData={true}
-          daysToDisplay={14}
+          daysToDisplay={7}
           isMini={true}
         />
       </div>

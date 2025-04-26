@@ -8,7 +8,6 @@ import {
 import { currencyIconMap } from '../utils/currencyIconMap';
 
 interface ChartProps {
-  ticker: string;
   currency: string;
   labels: string[];
   prices: number[];
@@ -16,7 +15,7 @@ interface ChartProps {
   isMini?: boolean; // New prop to indicate mini mode or dark mode
 }
 
-const Chart: React.FC<ChartProps> = ({ ticker, currency, labels, prices, chartType, isMini }) => {
+const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMini }) => {
   const theme = useTheme(); // Access the theme object
 
   // Prepare data for the chart
@@ -86,7 +85,7 @@ const Chart: React.FC<ChartProps> = ({ ticker, currency, labels, prices, chartTy
   };
 
   return (
-    <Box sx={{ width: '100%', height: 350 }}>
+    <Box sx={{ width: '100%', aspectRatio: '16/9', minHeight: '200px' }}>
       <ResponsiveContainer>
         {renderChart()}
       </ResponsiveContainer>

@@ -5,11 +5,10 @@ interface PriceDisplayProps {
   ticker: string;
   currentPrice: number;
   currency: string;
-  sx: {};
-  isMini?: boolean; // Add optional isMini prop
+  isMini?: boolean;
 }
 
-const PriceDisplay: React.FC<PriceDisplayProps> = ({ ticker, currentPrice, currency, sx, isMini = false }) => {
+const PriceDisplay: React.FC<PriceDisplayProps> = ({ ticker, currentPrice, currency, isMini = false }) => {
   // Determine the currency symbol based on the selected currency
   const currencySymbol = currency === 'usd' ? '$' : currency === 'eur' ? '€' : '';
 
@@ -18,16 +17,16 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({ ticker, currentPrice, curre
       id={`price-${ticker}`}
       sx={{
         display: 'flex',
-        flexDirection: isMini ? 'row' : 'column', // Stack vertically in mini mode
+        flexDirection: 'column', // Stack vertically in mini mode
         alignItems: 'center',
-        gap: isMini ? 1 : 0, // Adjust spacing for mini mode
-        verticalAlign: 'center',
-        ...sx,
+        pt: isMini ? .4 : 0,
       }}
     >
-      <Typography variant="h6" component="div" sx={{ width: 'max-content' }}>
-        Current Price:
-      </Typography>
+        {!isMini && (
+            <Typography variant="h6" component="div" sx={{ width: 'max-content' }}>
+                Current Price:
+            </Typography>
+        )}
       <Typography component="span" sx={{ fontWeight: 'bold', color: '#33ac21' }}>
         {currencySymbol}{currentPrice.toFixed(2)}
       </Typography>
