@@ -6,6 +6,12 @@ interface NavBarProps {
   setCurrency: (currency: string) => void;
 }
 
+const currencyIconMap: { [key: string]: string } = {
+  usd: '$',
+  eur: '€',
+  gbp: '£',
+};
+
 const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency }) => {
   return (
     <AppBar position="static">
@@ -18,10 +24,20 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency }) => {
             id="currency-select-navbar"
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
-            sx={{ color: 'white', borderColor: 'white', minWidth: 120 }}
+            sx={{
+              color: 'white',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              border: 'none',
+              minWidth: 120
+            }}
           >
-            <MenuItem value="usd">USD</MenuItem>
-            <MenuItem value="eur">EUR</MenuItem>
+            {Object.entries(currencyIconMap).map(([key, symbol]) => (
+              <MenuItem key={key} value={key}>
+                <Typography variant="subtitle1" sx={{ display: 'flex', alignItems: 'center' }}>
+                  {symbol} {key.toUpperCase()}
+                </Typography>
+              </MenuItem>
+            ))}
           </Select>
         </Box>
       </Toolbar>
@@ -30,3 +46,4 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency }) => {
 };
 
 export default NavBar;
+

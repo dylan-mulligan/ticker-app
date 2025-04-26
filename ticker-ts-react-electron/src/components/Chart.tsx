@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Tooltip as MuiTooltip } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 interface ChartProps {
@@ -8,6 +8,12 @@ interface ChartProps {
   labels: string[];
   prices: number[];
 }
+
+const currencySymbolMap: { [key: string]: string } = {
+  usd: '$',
+  eur: '€',
+  gbp: '£',
+};
 
 const Chart: React.FC<ChartProps> = ({ ticker, currency, labels, prices }) => {
   const data = labels.map((label, index) => ({
@@ -21,8 +27,15 @@ const Chart: React.FC<ChartProps> = ({ ticker, currency, labels, prices }) => {
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" />
-          <YAxis domain={['auto', 'auto']} />
-          <Tooltip />
+          <YAxis 
+            domain={['auto', 'auto']} 
+            tickFormatter={(value) => `${currencySymbolMap[currency] || ''}${value}`}
+          />
+          <MuiTooltip title={`Prices in ${currency.toUpperCase()}`} arrow>
+            <Tooltip 
+              formatter={(value: number) => `${currencySymbolMap[currency] || ''}${value}`} 
+            />
+          </MuiTooltip>
           <Line type="monotone" dataKey="price" stroke="#4bc0c0" strokeWidth={2} />
         </LineChart>
       </ResponsiveContainer>
