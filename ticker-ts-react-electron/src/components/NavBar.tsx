@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
     AppBar, Toolbar, Typography, Select,
-    MenuItem, Box, IconButton, FormControlLabel, Checkbox
+    MenuItem, Box, IconButton
 } from '@mui/material';
-import { ShowChart, Brightness4, Brightness7 } from '@mui/icons-material'; // Import icons
+import { ShowChart, Brightness4, Brightness7, PushPin, PushPinOutlined } from '@mui/icons-material'; // Import icons
 import { currencyIconMap } from '../utils/currencyIconMap'; // Import the map
 
 interface NavBarProps {
@@ -22,10 +22,11 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
     setIsElectron(typeof window !== 'undefined' && (window as any).electronAPI?.isElectron);
   }, []);
 
-  const handleAlwaysOnTopChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAlwaysOnTop(event.target.checked);
+  const handleAlwaysOnTopToggle = () => {
+    const newAlwaysOnTop = !alwaysOnTop;
+    setAlwaysOnTop(newAlwaysOnTop);
     if (isElectron && (window as any).electronAPI) {
-      (window as any).electronAPI.setAlwaysOnTop(event.target.checked);
+      (window as any).electronAPI.setAlwaysOnTop(newAlwaysOnTop);
     }
   };
 
@@ -37,7 +38,7 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
           Ticker App
         </Typography>
 
-        <Box sx={{gap: 2, display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
           <Select
             id="currency-select-navbar"
             value={currency}
@@ -64,16 +65,12 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
             {darkMode ? <Brightness7 /> : <Brightness4 />} {/* Switch icons */}
           </IconButton>
           {isElectron && (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={alwaysOnTop}
-                  onChange={handleAlwaysOnTopChange}
-                  sx={{ color: 'white' }}
-                />
-              }
-              label={<Typography variant="body2" sx={{ color: 'white' }}>Always on Top</Typography>}
-            />
+            <IconButton
+              sx={{ color: 'white' }}
+              onClick={handleAlwaysOnTopToggle} // Toggle always on top
+            >
+              {alwaysOnTop ? <PushPin /> : <PushPinOutlined />} {/* Switch icons */}
+            </IconButton>
           )}
         </Box>
       </Toolbar>
@@ -82,3 +79,4 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
 };
 
 export default NavBar;
+
