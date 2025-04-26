@@ -1,21 +1,18 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Select, MenuItem, Box } from '@mui/material';
+import { ShowChart } from '@mui/icons-material'; // Import the stock logo icon
+import { currencyIconMap } from '../utils/currencyIconMap'; // Import the map
 
 interface NavBarProps {
   currency: string;
   setCurrency: (currency: string) => void;
 }
 
-const currencyIconMap: { [key: string]: string } = {
-  usd: '$',
-  eur: '€',
-  gbp: '£',
-};
-
 const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency }) => {
   return (
     <AppBar position="static">
       <Toolbar>
+        <ShowChart sx={{ marginRight: 1 }} /> {/* Add the stock logo */}
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
           Ticker App
         </Typography>
@@ -46,4 +43,3 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency }) => {
 };
 
 export default NavBar;
-

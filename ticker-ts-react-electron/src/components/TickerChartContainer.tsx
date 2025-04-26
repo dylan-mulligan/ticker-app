@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import AreaChartIcon from '@mui/icons-material/AreaChart';
 import Chart from './Chart';
 import PriceDisplay from './PriceDisplay';
 
@@ -15,6 +18,22 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({ ticker, cur
   const [labels, setLabels] = useState<string[]>([]);
   const [prices, setPrices] = useState<number[]>([]);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
+  const [chartType, setChartType] = useState<'line' | 'bar' | 'area'>('line');
+
+  const cycleChartType = () => {
+    setChartType((prevType) => (prevType === 'line' ? 'bar' : prevType === 'bar' ? 'area' : 'line'));
+  };
+
+  const getChartIcon = () => {
+    switch (chartType) {
+      case 'bar':
+        return <BarChartIcon />;
+      case 'area':
+        return <AreaChartIcon />;
+      default:
+        return <ShowChartIcon />;
+    }
+  };
 
   useEffect(() => {
     if (!fetchData) return;
@@ -59,8 +78,17 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({ ticker, cur
         width: '500px'
       }}
     >
-      <PriceDisplay ticker={ticker} currentPrice={currentPrice} currency={currency} />
-      <Chart ticker={ticker} currency={currency} labels={labels} prices={prices} />
+      <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', pl: 1}}>
+        <PriceDisplay 
+          ticker={ticker} 
+          currentPrice={currentPrice} 
+          currency={currency}
+        />
+        <Button variant="contained" onClick={cycleChartType} sx={{ marginBottom: 2 }}>
+          {getChartIcon()}
+        </Button>
+      </Box>
+      <Chart ticker={ticker} currency={currency} labels={labels} prices={prices} chartType={chartType} />
     </Box>
   );
 };

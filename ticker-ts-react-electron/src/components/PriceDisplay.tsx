@@ -15,7 +15,7 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({ ticker, currentPrice, curre
       <Typography variant="h6" component="div">
         Current Price:
       </Typography>
-      <Typography component="span" sx={{ fontWeight: 'bold' }}>
+      <Typography component="span" sx={{ fontWeight: 'bold', color: '#33ac21' }}>
         {currencySymbol}{currentPrice.toFixed(2)}
       </Typography>
     </Box>

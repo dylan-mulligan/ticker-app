@@ -1,46 +1,83 @@
 import React from 'react';
-import { Box, Tooltip as MuiTooltip } from '@mui/material';
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { Box } from '@mui/material';
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, BarChart, Bar, AreaChart, Area } from 'recharts';
+import { currencyIconMap } from '../utils/currencyIconMap'; // Import the map
 
 interface ChartProps {
   ticker: string;
   currency: string;
   labels: string[];
   prices: number[];
+  chartType: 'line' | 'bar' | 'area'; // Accept chartType as a prop
 }
 
-const currencySymbolMap: { [key: string]: string } = {
-  usd: '$',
-  eur: '€',
-  gbp: '£',
-};
-
-const Chart: React.FC<ChartProps> = ({ ticker, currency, labels, prices }) => {
+const Chart: React.FC<ChartProps> = ({ ticker, currency, labels, prices, chartType }) => {
   const data = labels.map((label, index) => ({
     date: label,
     price: prices[index],
   }));
 
-  return (
-    <Box sx={{ width: '100%', height: 300 }}>
-      <ResponsiveContainer>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis 
-            domain={['auto', 'auto']} 
-            tickFormatter={(value) => `${currencySymbolMap[currency] || ''}${value}`}
-          />
-          <MuiTooltip title={`Prices in ${currency.toUpperCase()}`} arrow>
-            <Tooltip 
-              formatter={(value: number) => `${currencySymbolMap[currency] || ''}${value}`} 
+  const renderChart = () => {
+    switch (chartType) {
+      case 'bar':
+        return (
+          <BarChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis
+              domain={['auto', 'auto']}
+              tickFormatter={(value) => `${currencyIconMap[currency] || ''}${value}`}
             />
-          </MuiTooltip>
-          <Line type="monotone" dataKey="price" stroke="#4bc0c0" strokeWidth={2} />
-        </LineChart>
+            <Tooltip
+              formatter={(value: number) => `${currencyIconMap[currency] || ''}${value.toFixed(2)}`}
+              labelFormatter={(label: string) => `Date: ${label}`}
+            />
+            <Bar dataKey="price" fill="#8884d8" />
+          </BarChart>
+        );
+      case 'area':
+        return (
+          <AreaChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis
+              domain={['auto', 'auto']}
+              tickFormatter={(value) => `${currencyIconMap[currency] || ''}${value}`}
+            />
+            <Tooltip
+              formatter={(value: number) => `${currencyIconMap[currency] || ''}${value.toFixed(2)}`}
+              labelFormatter={(label: string) => `Date: ${label}`}
+            />
+            <Area type="monotone" dataKey="price" stroke="#82ca9d" fill="#82ca9d" />
+          </AreaChart>
+        );
+      default:
+        return (
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis
+              domain={['auto', 'auto']}
+              tickFormatter={(value) => `${currencyIconMap[currency] || ''}${value}`}
+            />
+            <Tooltip
+              formatter={(value: number) => `${currencyIconMap[currency] || ''}${value.toFixed(2)}`}
+              labelFormatter={(label: string) => `Date: ${label}`}
+            />
+            <Line type="monotone" dataKey="price" stroke="#4bc0c0" strokeWidth={2} />
+          </LineChart>
+        );
+    }
+  };
+
+  return (
+    <Box sx={{ width: '100%', height: 350 }}>
+      <ResponsiveContainer>
+        {renderChart()}
       </ResponsiveContainer>
     </Box>
   );
 };
 
 export default Chart;
+
