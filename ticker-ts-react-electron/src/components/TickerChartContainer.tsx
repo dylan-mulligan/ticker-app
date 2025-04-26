@@ -179,8 +179,9 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
           ticker={ticker}
           currentPrice={currentPrice}
           currency={currency}
+          isMini={isMini}
           sx={{
-            fontSize: isMini ? '0.9rem' : '1rem', // Smaller font size for mini mode
+            fontSize: isMini ? '0.9rem' : '1rem',
             textAlign: isMini ? 'center' : 'left',
           }}
         />
@@ -215,6 +216,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         labels={labels}
         prices={prices}
         chartType={chartType}
+        isMini={isMini}
       />
       {isMini && (
         <Typography
