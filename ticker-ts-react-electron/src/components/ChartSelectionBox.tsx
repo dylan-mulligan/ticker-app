@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, FormGroup, IconButton, Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { FormControlLabel, Checkbox } from '@mui/material';
@@ -17,11 +17,19 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
   onTickerChange,
   onStockChange,
 }) => {
-  const [isSelectionBoxOpen, setIsSelectionBoxOpen] = useState(true);
+  const [isSelectionBoxOpen, setIsSelectionBoxOpen] = useState(() => {
+    // Initialize from localStorage or default to true
+    const savedState = localStorage.getItem('chartSelectionBoxOpen');
+    return savedState !== null ? JSON.parse(savedState) : true;
+  });
 
-  // Function to handle the checkbox change for tickers
+  // Save the state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('chartSelectionBoxOpen', JSON.stringify(isSelectionBoxOpen));
+  }, [isSelectionBoxOpen]);
+
   const toggleSelectionBox = () => {
-    setIsSelectionBoxOpen((prev) => !prev);
+    setIsSelectionBoxOpen((prev: any) => !prev);
   };
 
   return (

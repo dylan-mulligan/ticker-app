@@ -57,6 +57,12 @@ function createWindow() {
             mainWindow.setAlwaysOnTop(isAlwaysOnTop);
         }
     });
+
+    ipcMain.on('set-initial-always-on-top', (event, isAlwaysOnTop) => {
+        if (mainWindow) {
+            mainWindow.setAlwaysOnTop(isAlwaysOnTop); // Apply initial state
+        }
+    });
 }
 
 app.whenReady().then(createWindow);
@@ -72,3 +78,4 @@ app.on('activate', () => {
         createWindow();
     }
 });
+

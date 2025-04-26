@@ -20,14 +20,33 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
   useEffect(() => {
     // Check if running in Electron
     setIsElectron(typeof window !== 'undefined' && (window as any).electronAPI?.isElectron);
-  }, []);
+
+    // Initialize alwaysOnTop and darkMode from localStorage
+    const savedAlwaysOnTop = localStorage.getItem('alwaysOnTop');
+    const savedDarkMode = localStorage.getItem('darkMode');
+    if (savedAlwaysOnTop !== null) {
+      const alwaysOnTopState = savedAlwaysOnTop === 'true';
+      setAlwaysOnTop(alwaysOnTopState);
+      if (isElectron && (window as any).electronAPI) {
+        (window as any).electronAPI.setInitialAlwaysOnTop(alwaysOnTopState); // Send initial state to Electron
+      }
+    }
+    if (savedDarkMode !== null) setDarkMode(savedDarkMode === 'true');
+  }, [isElectron]); // Add isElectron as a dependency
 
   const handleAlwaysOnTopToggle = () => {
     const newAlwaysOnTop = !alwaysOnTop;
     setAlwaysOnTop(newAlwaysOnTop);
+    localStorage.setItem('alwaysOnTop', newAlwaysOnTop.toString()); // Save to localStorage
     if (isElectron && (window as any).electronAPI) {
       (window as any).electronAPI.setAlwaysOnTop(newAlwaysOnTop);
     }
+  };
+
+  const handleDarkModeToggle = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', newDarkMode.toString()); // Save to localStorage
   };
 
   return (
@@ -60,7 +79,7 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
           </Select>
           <IconButton
             sx={{ color: 'white' }}
-            onClick={() => setDarkMode(!darkMode)} // Toggle dark mode
+            onClick={handleDarkModeToggle} // Use the new handler
           >
             {darkMode ? <Brightness7 /> : <Brightness4 />} {/* Switch icons */}
           </IconButton>

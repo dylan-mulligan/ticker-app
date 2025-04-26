@@ -105,6 +105,7 @@ function App() {
               flexDirection: 'row',
               alignItems: 'center',
               flexWrap: 'wrap',
+              justifyContent: 'center',
             }}
           >
             {renderQueue.map((ticker) => (
