@@ -86,7 +86,12 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box>
-        <CustomToolbar /> {/* Add the custom toolbar */}
+        <CustomToolbar
+          currency={currency}
+          setCurrency={setCurrency}
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+        />
         <NavBar
           currency={currency}
           setCurrency={setCurrency}

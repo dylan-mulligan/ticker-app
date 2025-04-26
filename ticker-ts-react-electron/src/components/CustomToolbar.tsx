@@ -1,15 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Box, IconButton, Typography } from '@mui/material';
-import { Close, Minimize, CropSquare } from '@mui/icons-material';
+import { Box, IconButton, Typography, Select, MenuItem } from '@mui/material';
+import { Close, Minimize, CropSquare, Brightness4, Brightness7, PushPin, PushPinOutlined } from '@mui/icons-material';
+import { currencyIconMap } from '../utils/currencyIconMap'; // Import the map
 
-const CustomToolbar: React.FC = () => {
+const CustomToolbar: React.FC<{ 
+  currency: string; 
+  setCurrency: (currency: string) => void; 
+  darkMode: boolean; 
+  setDarkMode: (mode: boolean) => void; 
+}> = ({ currency, setCurrency, darkMode, setDarkMode }) => {
   const [isElectron, setIsElectron] = useState(false);
+  const [alwaysOnTop, setAlwaysOnTop] = useState(false);
 
   useEffect(() => {
     setIsElectron(typeof window !== 'undefined' && (window as any).electronAPI?.isElectron);
-  }, []);
 
-  if (!isElectron) return null; // Do not render in a web browser
+    // Initialize alwaysOnTop and darkMode from localStorage
+    const savedAlwaysOnTop = localStorage.getItem('alwaysOnTop');
+    const savedDarkMode = localStorage.getItem('darkMode');
+    if (savedAlwaysOnTop !== null) {
+      const alwaysOnTopState = savedAlwaysOnTop === 'true';
+      setAlwaysOnTop(alwaysOnTopState);
+      if (isElectron && (window as any).electronAPI) {
+        (window as any).electronAPI.setInitialAlwaysOnTop(alwaysOnTopState);
+      }
+    }
+    if (savedDarkMode !== null) setDarkMode(savedDarkMode === 'true');
+  }, [isElectron]);
 
   const handleMinimize = () => {
     if ((window as any).electronAPI) {
@@ -29,6 +46,23 @@ const CustomToolbar: React.FC = () => {
     }
   };
 
+  const handleAlwaysOnTopToggle = () => {
+    const newAlwaysOnTop = !alwaysOnTop;
+    setAlwaysOnTop(newAlwaysOnTop);
+    localStorage.setItem('alwaysOnTop', newAlwaysOnTop.toString());
+    if (isElectron && (window as any).electronAPI) {
+      (window as any).electronAPI.setAlwaysOnTop(newAlwaysOnTop);
+    }
+  };
+
+  const handleDarkModeToggle = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', newDarkMode.toString());
+  };
+
+  if (!isElectron) return null; // Do not render in a web browser
+
   return (
     <Box
       sx={{
@@ -38,13 +72,38 @@ const CustomToolbar: React.FC = () => {
         backgroundColor: '#333',
         color: 'white',
         padding: '0.5rem 1rem',
-        WebkitAppRegion: 'drag', // Make the toolbar draggable
+        WebkitAppRegion: 'drag',
       }}
     >
       <Typography variant="h6" sx={{ WebkitAppRegion: 'no-drag' }}>
         Ticker App
       </Typography>
-      <Box sx={{ display: 'flex', gap: 1, WebkitAppRegion: 'no-drag' }}>
+      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', WebkitAppRegion: 'no-drag' }}>
+        <Select
+          id="currency-select-toolbar"
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value)}
+          sx={{
+            color: 'white',
+            backgroundColor: 'transparent',
+            border: 'none',
+            minWidth: 70,
+          }}
+        >
+          {Object.entries(currencyIconMap).map(([key, symbol]) => (
+            <MenuItem key={key} value={key}>
+              <Typography variant="h6" sx={{ pl: 1 }}>
+                {`${symbol}`}
+              </Typography>
+            </MenuItem>
+          ))}
+        </Select>
+        <IconButton sx={{ color: 'white' }} onClick={handleDarkModeToggle}>
+          {darkMode ? <Brightness7 /> : <Brightness4 />}
+        </IconButton>
+        <IconButton sx={{ color: 'white' }} onClick={handleAlwaysOnTopToggle}>
+          {alwaysOnTop ? <PushPin /> : <PushPinOutlined />}
+        </IconButton>
         <IconButton onClick={handleMinimize} sx={{ color: 'white' }}>
           <Minimize />
         </IconButton>
@@ -60,3 +119,4 @@ const CustomToolbar: React.FC = () => {
 };
 
 export default CustomToolbar;
+
