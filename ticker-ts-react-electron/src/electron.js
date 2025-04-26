@@ -88,6 +88,28 @@ function createWindow() {
     });
 }
 
+function createChartWindow(ticker, currency, chartType) {
+    const chartWindow = new BrowserWindow({
+        width: 400,
+        height: 300,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            contextIsolation: true,
+            enableRemoteModule: false,
+            nodeIntegration: false,
+        },
+    });
+
+    chartWindow.loadURL(
+        process.env.ELECTRON_START_URL ||
+        `file://${path.join(__dirname, 'build', 'index.html')}?ticker=${ticker}&currency=${currency}&chartType=${chartType}`
+    );
+}
+
+ipcMain.on('open-chart-window', (event, { ticker, currency, chartType }) => {
+    createChartWindow(ticker, currency, chartType);
+});
+
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
@@ -101,3 +123,4 @@ app.on('activate', () => {
         createWindow();
     }
 });
+

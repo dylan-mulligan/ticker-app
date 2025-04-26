@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Slider, Typography } from '@mui/material';
-import {BarChartRounded, ShowChartRounded, AreaChartRounded} from '@mui/icons-material';
+import { Box, Button, Slider, Typography, IconButton } from '@mui/material';
+import { BarChartRounded, ShowChartRounded, AreaChartRounded, OpenInNew } from '@mui/icons-material';
 import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react';
 import Chart from './Chart';
 import PriceDisplay from './PriceDisplay';
@@ -123,6 +123,10 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
     fetchChartData();
   }, [localDaysToDisplay]);
 
+  const openInNewWindow = () => {
+    (window as any).electronAPI.openChartWindow(ticker, currency, chartType);
+  };
+
   return (
     <Box
       id={`chart-container-${ticker}`}
@@ -134,9 +138,14 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         width: 'min-content',
       }}
     >
-      <Typography variant="h6" sx={{ textAlign: 'center', marginBottom: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-        {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h6" sx={{ textAlign: 'center', marginBottom: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+          {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
+        </Typography>
+        <IconButton onClick={openInNewWindow} title="Open in new window">
+          <OpenInNew />
+        </IconButton>
+      </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 2 }}>
         <PriceDisplay ticker={ticker} currentPrice={currentPrice} currency={currency} />
         <Box sx={{ width: 175, marginTop: 0.5 }}>
@@ -159,4 +168,3 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 };
 
 export default TickerChartContainer;
-

@@ -6,5 +6,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     minimizeWindow: () => ipcRenderer.send('minimize-window'),
     maximizeWindow: () => ipcRenderer.send('maximize-window'),
     closeWindow: () => ipcRenderer.send('close-window'),
+    openChartWindow: (ticker, currency, chartType) =>
+        ipcRenderer.send('open-chart-window', { ticker, currency, chartType }),
     isElectron: true,
 });
