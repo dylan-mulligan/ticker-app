@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography, FormGroup, IconButton, Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { FormControlLabel, Checkbox } from '@mui/material';
-import { BarChart } from '@mui/icons-material'; // Added import for BarChart icon
+import { BarChart } from '@mui/icons-material';
 
 interface ChartSelectionBoxProps {
   selectedTickers: string[];
@@ -19,6 +19,7 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
 }) => {
   const [isSelectionBoxOpen, setIsSelectionBoxOpen] = useState(true);
 
+  // Function to handle the checkbox change for tickers
   const toggleSelectionBox = () => {
     setIsSelectionBoxOpen((prev) => !prev);
   };

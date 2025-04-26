@@ -4,11 +4,12 @@ import { Box, Typography } from '@mui/material';
 interface PriceDisplayProps {
   ticker: string;
   currentPrice: number;
-  currency: string; // Add currency prop
+  currency: string;
 }
 
 const PriceDisplay: React.FC<PriceDisplayProps> = ({ ticker, currentPrice, currency }) => {
-  const currencySymbol = currency === 'usd' ? '$' : currency === 'eur' ? '€' : ''; // Determine symbol
+  // Determine the currency symbol based on the selected currency
+  const currencySymbol = currency === 'usd' ? '$' : currency === 'eur' ? '€' : '';
 
   return (
     <Box id={`price-${ticker}`} sx={{ mb: 2 }}>

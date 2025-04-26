@@ -1,5 +1,8 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Select, MenuItem, Box, IconButton } from '@mui/material';
+import {
+    AppBar, Toolbar, Typography, Select,
+    MenuItem, Box, IconButton
+} from '@mui/material';
 import { ShowChart, Brightness4, Brightness7 } from '@mui/icons-material'; // Import icons
 import { currencyIconMap } from '../utils/currencyIconMap'; // Import the map
 

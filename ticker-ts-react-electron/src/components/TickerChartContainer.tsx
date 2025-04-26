@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Slider, Typography } from '@mui/material'; // Import Slider and Typography
-import BarChartIcon from '@mui/icons-material/BarChart';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import AreaChartIcon from '@mui/icons-material/AreaChart';
-import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react'; // Import Tabler icons
+import { Box, Button, Slider, Typography } from '@mui/material';
+import {BarChartRounded, ShowChartRounded, AreaChartRounded} from '@mui/icons-material';
+import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react';
 import Chart from './Chart';
 import PriceDisplay from './PriceDisplay';
 
@@ -34,6 +32,7 @@ const processQueue = async () => {
   isProcessingQueue = false;
 };
 
+// Get the appropriate cryptocurrency icon based on the ticker
 const getCryptoIcon = (ticker: string) => {
   switch (ticker.toLowerCase()) {
     case 'bitcoin':
@@ -57,21 +56,24 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
   const [chartType, setChartType] = useState<'line' | 'bar' | 'area'>('line');
   const [localDaysToDisplay, setDaysToDisplay] = useState<number>(daysToDisplay);
 
+  // Cycle through chart types (line, bar, area)
   const cycleChartType = () => {
     setChartType((prevType) => (prevType === 'line' ? 'bar' : prevType === 'bar' ? 'area' : 'line'));
   };
 
+  // Get the appropriate chart icon based on the chart type
   const getChartIcon = () => {
     switch (chartType) {
       case 'bar':
-        return <BarChartIcon />;
+        return <BarChartRounded />;
       case 'area':
-        return <AreaChartIcon />;
+        return <AreaChartRounded />;
       default:
-        return <ShowChartIcon />;
+        return <ShowChartRounded />;
     }
   };
 
+  // Fetch chart data from the API
   const fetchChartData = async () => {
     const days = 30; // Total days to query from the API
     try {
@@ -104,6 +106,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
     }
   };
 
+  // Fetch data when the component mounts or dependencies change
   useEffect(() => {
     if (!fetchData) return;
 
@@ -113,10 +116,10 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 
     requestQueue.push(request);
     processQueue();
-  }, [ticker, currency, fetchData]); // Trigger only when fetching new data
+  }, [ticker, currency, fetchData]);
 
+  // Update chart when `localDaysToDisplay` changes
   useEffect(() => {
-    // Update chart without delay when localDaysToDisplay changes
     fetchChartData();
   }, [localDaysToDisplay]);
 

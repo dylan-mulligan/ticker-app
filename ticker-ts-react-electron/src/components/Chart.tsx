@@ -1,22 +1,28 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, BarChart, Bar, AreaChart, Area } from 'recharts';
-import { currencyIconMap } from '../utils/currencyIconMap'; // Import the map
+import {
+  LineChart, Line, XAxis, YAxis, Tooltip,
+  CartesianGrid, ResponsiveContainer,
+  BarChart, Bar, AreaChart, Area,
+} from 'recharts';
+import { currencyIconMap } from '../utils/currencyIconMap';
 
 interface ChartProps {
   ticker: string;
   currency: string;
   labels: string[];
   prices: number[];
-  chartType: 'line' | 'bar' | 'area'; // Accept chartType as a prop
+  chartType: 'line' | 'bar' | 'area';
 }
 
 const Chart: React.FC<ChartProps> = ({ ticker, currency, labels, prices, chartType }) => {
+  // Prepare data for the chart
   const data = labels.map((label, index) => ({
     date: label,
     price: prices[index],
   }));
 
+  // Render the appropriate chart based on the chartType prop
   const renderChart = () => {
     switch (chartType) {
       case 'bar':
@@ -80,4 +86,3 @@ const Chart: React.FC<ChartProps> = ({ ticker, currency, labels, prices, chartTy
 };
 
 export default Chart;
-
