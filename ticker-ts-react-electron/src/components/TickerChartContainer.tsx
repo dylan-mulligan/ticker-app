@@ -116,9 +116,13 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         borderRadius: '8px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
         p: 3,
+        width: 'min-content',
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+      <Typography variant="h6" sx={{ textAlign: 'center', marginBottom: 2 }}>
+        {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
+      </Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 2 }}>
         <PriceDisplay ticker={ticker} currentPrice={currentPrice} currency={currency} />
         <Box sx={{ width: 175, marginTop: 0.5 }}>
           <Typography>Days to Display</Typography>
@@ -140,3 +144,4 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 };
 
 export default TickerChartContainer;
+

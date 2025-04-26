@@ -12,7 +12,7 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({ ticker, currentPrice, curre
 
   return (
     <Box id={`price-${ticker}`} sx={{ mb: 2 }}>
-      <Typography variant="h6" component="div">
+      <Typography variant="h6" component="div" sx={{ width: 'max-content' }}>
         Current Price:
       </Typography>
       <Typography component="span" sx={{ fontWeight: 'bold', color: '#33ac21' }}>
