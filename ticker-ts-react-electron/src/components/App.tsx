@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, CssBaseline, createTheme, ThemeProvider, Typography } from '@mui/material';
 import TickerChartContainer from './TickerChartContainer';
 import NavBar from './NavBar';
@@ -6,8 +6,14 @@ import ChartSelectionBox from './ChartSelectionBox'; // Import the new component
 
 function App() {
   const [currency, setCurrency] = useState('usd');
-  const [selectedTickers, setSelectedTickers] = useState<string[]>(['bitcoin']);
-  const [selectedStocks, setSelectedStocks] = useState<string[]>([]);
+  const [selectedTickers, setSelectedTickers] = useState<string[]>(() => {
+    const savedTickers = localStorage.getItem('selectedTickers');
+    return savedTickers ? JSON.parse(savedTickers) : ['bitcoin'];
+  });
+  const [selectedStocks, setSelectedStocks] = useState<string[]>(() => {
+    const savedStocks = localStorage.getItem('selectedStocks');
+    return savedStocks ? JSON.parse(savedStocks) : [];
+  });
   const [darkMode, setDarkMode] = useState(false); // Add dark mode state
   const [daysToDisplay, setDaysToDisplay] = useState(14); // Add state for daysToDisplay
 
@@ -28,6 +34,14 @@ function App() {
       prev.includes(stock) ? prev.filter((s) => s !== stock) : [...prev, stock]
     );
   };
+
+  useEffect(() => {
+    localStorage.setItem('selectedTickers', JSON.stringify(selectedTickers));
+  }, [selectedTickers]);
+
+  useEffect(() => {
+    localStorage.setItem('selectedStocks', JSON.stringify(selectedStocks));
+  }, [selectedStocks]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -65,3 +79,4 @@ function App() {
 }
 
 export default App;
+

@@ -15,18 +15,37 @@ interface TickerChartContainerProps {
   daysToDisplay: number; // Add daysToDisplay prop
 }
 
+// Shared request queue to manage API calls
+const requestQueue: (() => Promise<void>)[] = [];
+let isProcessingQueue = false;
+
+const processQueue = async () => {
+  if (isProcessingQueue) return;
+  isProcessingQueue = true;
+
+  while (requestQueue.length > 0) {
+    const nextRequest = requestQueue.shift();
+    if (nextRequest) {
+      await nextRequest();
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // 2-second delay between requests
+    }
+  }
+
+  isProcessingQueue = false;
+};
+
 const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
   ticker,
   currency,
   fetchData,
   delay,
-  daysToDisplay, // Destructure daysToDisplay
+  daysToDisplay,
 }) => {
   const [labels, setLabels] = useState<string[]>([]);
   const [prices, setPrices] = useState<number[]>([]);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [chartType, setChartType] = useState<'line' | 'bar' | 'area'>('line');
-  const [localDaysToDisplay, setDaysToDisplay] = useState<number>(daysToDisplay); // Add local state for daysToDisplay
+  const [localDaysToDisplay, setDaysToDisplay] = useState<number>(daysToDisplay);
 
   const cycleChartType = () => {
     setChartType((prevType) => (prevType === 'line' ? 'bar' : prevType === 'bar' ? 'area' : 'line'));
@@ -43,47 +62,53 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
     }
   };
 
+  const fetchChartData = async () => {
+    const days = 30; // Total days to query from the API
+    try {
+      const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${ticker}/market_chart`, {
+        params: { vs_currency: currency, days },
+      });
+      const data = response.data;
+
+      // Get the timestamp for `localDaysToDisplay` days ago
+      const nDaysAgo = new Date();
+      nDaysAgo.setDate(nDaysAgo.getDate() - localDaysToDisplay);
+      const nDaysAgoTimestamp = nDaysAgo.getTime();
+
+      // Filter data for the last `localDaysToDisplay` days
+      const filteredData = data.prices.filter(
+        (price: [number, number]) => price[0] >= nDaysAgoTimestamp
+      );
+
+      // Map filtered data to labels and prices
+      const newLabels = filteredData.map((price: [number, number]) =>
+        new Date(price[0]).toLocaleDateString()
+      );
+      const newPrices = filteredData.map((price: [number, number]) => price[1]);
+
+      setLabels(newLabels);
+      setPrices(newPrices);
+      setCurrentPrice(newPrices[newPrices.length - 1]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   useEffect(() => {
     if (!fetchData) return;
 
-    const timeoutId = setTimeout(() => {
-      const fetchDataAsync = async () => {
-        const days = 30; // Total days to query from the API
-        try {
-          const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${ticker}/market_chart`, {
-            params: { vs_currency: currency, days },
-          });
-          const data = response.data;
+    const request = async () => {
+      await fetchChartData();
+    };
 
-          // Get the timestamp for `localDaysToDisplay` days ago
-          const nDaysAgo = new Date();
-          nDaysAgo.setDate(nDaysAgo.getDate() - localDaysToDisplay);
-          const nDaysAgoTimestamp = nDaysAgo.getTime();
+    requestQueue.push(request);
+    processQueue();
+  }, [ticker, currency, fetchData]); // Trigger only when fetching new data
 
-          // Filter data for the last `localDaysToDisplay` days
-          const filteredData = data.prices.filter(
-            (price: [number, number]) => price[0] >= nDaysAgoTimestamp
-          );
-
-          // Map filtered data to labels and prices
-          const newLabels = filteredData.map((price: [number, number]) =>
-            new Date(price[0]).toLocaleDateString()
-          );
-          const newPrices = filteredData.map((price: [number, number]) => price[1]);
-
-          setLabels(newLabels);
-          setPrices(newPrices);
-          setCurrentPrice(newPrices[newPrices.length - 1]);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
-
-      fetchDataAsync();
-    }, delay);
-
-    return () => clearTimeout(timeoutId);
-  }, [ticker, currency, fetchData, delay, localDaysToDisplay]); // Add localDaysToDisplay to dependencies
+  useEffect(() => {
+    // Update chart without delay when localDaysToDisplay changes
+    fetchChartData();
+  }, [localDaysToDisplay]);
 
   return (
     <Box
@@ -96,26 +121,22 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         maxWidth: 600,
         ml: 4,
         mr: 4,
-        width: '500px'
+        width: '500px',
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <PriceDisplay
-          ticker={ticker}
-          currentPrice={currentPrice}
-          currency={currency}
-        />
+        <PriceDisplay ticker={ticker} currentPrice={currentPrice} currency={currency} />
         <Box sx={{ width: 200, marginTop: 0.5 }}>
           <Typography>Days to Display</Typography>
           <Slider
-              value={localDaysToDisplay}
-              onChange={(event, value) => setDaysToDisplay(value as number)} // Update localDaysToDisplay locally
-              min={1}
-              max={30}
-              valueLabelDisplay="auto"
+            value={localDaysToDisplay}
+            onChange={(event, value) => setDaysToDisplay(value as number)}
+            min={1}
+            max={30}
+            valueLabelDisplay="auto"
           />
         </Box>
-        <Button variant="contained" onClick={cycleChartType} sx={{ marginBottom: 2 }}>
+        <Button variant="contained" onClick={cycleChartType} sx={{ marginBottom: 2, borderRadius: 2 }}>
           {getChartIcon()}
         </Button>
       </Box>
@@ -125,4 +146,3 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 };
 
 export default TickerChartContainer;
-
