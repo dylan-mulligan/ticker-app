@@ -16,6 +16,7 @@ function App() {
   });
   const [darkMode, setDarkMode] = useState(false); // Add dark mode state
   const [daysToDisplay, setDaysToDisplay] = useState(14); // Add state for daysToDisplay
+  const [renderQueue, setRenderQueue] = useState<string[]>([]); // Add state for render queue
 
   const theme = createTheme({
     palette: {
@@ -43,6 +44,27 @@ function App() {
     localStorage.setItem('selectedStocks', JSON.stringify(selectedStocks));
   }, [selectedStocks]);
 
+  // Effect to manage the render queue with delays
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (renderQueue.length < selectedTickers.length) {
+      if (renderQueue.length === 0) {
+        // Immediately add the first ticker without delay
+        setRenderQueue([selectedTickers[0]]);
+      } else {
+        const nextTicker = selectedTickers[renderQueue.length];
+        timeoutId = setTimeout(() => {
+          setRenderQueue((prev) => [...prev, nextTicker]);
+        }, 2000);
+      }
+    }
+    return () => clearTimeout(timeoutId);
+  }, [renderQueue, selectedTickers]);
+
+  useEffect(() => {
+    setRenderQueue([]); // Reset the render queue when selectedTickers changes
+  }, [selectedTickers]);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -60,14 +82,13 @@ function App() {
             onTickerChange={handleTickerChange}
             onStockChange={handleStockChange}
           />
-          <Box sx={{ gap: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {selectedTickers.map((ticker, index) => (
+          <Box sx={{ gap: 4, display: 'flex', flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
+            {renderQueue.map((ticker, index) => (
               <TickerChartContainer
                 key={ticker}
                 ticker={ticker}
                 currency={currency}
                 fetchData={true}
-                delay={index * 2000}
                 daysToDisplay={daysToDisplay} // Pass daysToDisplay to TickerChartContainer
               />
             ))}

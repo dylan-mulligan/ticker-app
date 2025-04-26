@@ -26,7 +26,7 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
             onChange={(e) => setCurrency(e.target.value)}
             sx={{
               color: 'white',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              backgroundColor: 'transparent', // Make the select transparent
               border: 'none',
               minWidth: 120
             }}

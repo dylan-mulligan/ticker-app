@@ -11,7 +11,6 @@ interface TickerChartContainerProps {
   ticker: string;
   currency: string;
   fetchData: boolean;
-  delay: number;
   daysToDisplay: number; // Add daysToDisplay prop
 }
 
@@ -38,7 +37,6 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
   ticker,
   currency,
   fetchData,
-  delay,
   daysToDisplay,
 }) => {
   const [labels, setLabels] = useState<string[]>([]);
@@ -118,15 +116,11 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         borderRadius: '8px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
         p: 3,
-        maxWidth: 600,
-        ml: 4,
-        mr: 4,
-        width: '500px',
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
         <PriceDisplay ticker={ticker} currentPrice={currentPrice} currency={currency} />
-        <Box sx={{ width: 200, marginTop: 0.5 }}>
+        <Box sx={{ width: 175, marginTop: 0.5 }}>
           <Typography>Days to Display</Typography>
           <Slider
             value={localDaysToDisplay}
