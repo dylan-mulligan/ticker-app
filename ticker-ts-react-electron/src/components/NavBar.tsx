@@ -34,7 +34,7 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
             {Object.entries(currencyIconMap).map(([key, symbol]) => (
               <MenuItem key={key} value={key}>
                 <Typography variant="subtitle1" sx={{ display: 'flex', alignItems: 'center' }}>
-                  {symbol} {key.toUpperCase()}
+                  {`${symbol}\u00A0\u00A0\u00A0\u00A0${key.toUpperCase()}`}
                 </Typography>
               </MenuItem>
             ))}
