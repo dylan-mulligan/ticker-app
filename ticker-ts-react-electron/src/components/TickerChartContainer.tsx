@@ -5,6 +5,7 @@ import { BarChartRounded, ShowChartRounded, AreaChartRounded, OpenInNew } from '
 import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react';
 import Chart from './Chart';
 import PriceDisplay from './PriceDisplay';
+import MiniChartControls from './MiniChartControls';
 
 interface TickerChartContainerProps {
   ticker: string;
@@ -129,6 +130,10 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
     (window as any).electronAPI.openChartWindow(ticker, currency, chartType);
   };
 
+  const handleRangeChange = (days: number) => {
+    setDaysToDisplay(days);
+  };
+
   return (
     <Box
       id={`chart-container-${ticker}`}
@@ -238,6 +243,10 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
                 currency={currency}
                 isMini={isMini}
             />
+            <MiniChartControls
+              onRangeChange={handleRangeChange}
+              selectedRange={localDaysToDisplay}
+            />
             <Button
                 variant="outlined"
                 onClick={cycleChartType}
@@ -258,3 +267,4 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 };
 
 export default TickerChartContainer;
+
