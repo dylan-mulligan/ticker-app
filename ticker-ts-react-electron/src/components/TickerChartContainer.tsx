@@ -4,6 +4,7 @@ import { Box, Button, Slider, Typography } from '@mui/material'; // Import Slide
 import BarChartIcon from '@mui/icons-material/BarChart';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import AreaChartIcon from '@mui/icons-material/AreaChart';
+import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react'; // Import Tabler icons
 import Chart from './Chart';
 import PriceDisplay from './PriceDisplay';
 
@@ -31,6 +32,17 @@ const processQueue = async () => {
   }
 
   isProcessingQueue = false;
+};
+
+const getCryptoIcon = (ticker: string) => {
+  switch (ticker.toLowerCase()) {
+    case 'bitcoin':
+      return <IconCurrencyBitcoin size={28} />;
+    case 'ethereum':
+      return <IconCurrencyEthereum size={28} />;
+    default:
+      return <IconCurrencyDogecoin size={28} />;
+  }
 };
 
 const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
@@ -119,8 +131,8 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         width: 'min-content',
       }}
     >
-      <Typography variant="h6" sx={{ textAlign: 'center', marginBottom: 2 }}>
-        {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
+      <Typography variant="h6" sx={{ textAlign: 'center', marginBottom: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+        {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
       </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 2 }}>
         <PriceDisplay ticker={ticker} currentPrice={currentPrice} currency={currency} />
