@@ -107,6 +107,8 @@ function createChartWindow(ticker, currency, chartType) {
     const baseUrl = process.env.ELECTRON_START_URL || `file://${path.join(__dirname, 'build', 'index.html')}`;
     const chartUrl = `${baseUrl}/${ticker}-${currency}?chartType=${chartType}`;
 
+    chartWindow.setAspectRatio(64 / 47);
+
     chartWindow.loadURL(chartUrl);
 
     // Use `ticker-currency` as the key
