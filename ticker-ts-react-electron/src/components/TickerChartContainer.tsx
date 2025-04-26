@@ -136,6 +136,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
         p: 3,
         width: 'min-content',
+        backgroundColor: 'rgba(161,161,161,0.39)', // Added background color for transparency support
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -168,3 +169,4 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 };
 
 export default TickerChartContainer;
+

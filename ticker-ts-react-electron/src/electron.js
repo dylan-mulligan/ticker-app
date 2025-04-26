@@ -94,6 +94,8 @@ function createChartWindow(ticker, currency, chartType) {
         width: 500,
         height: 600,
         frame: false, // Disable default frame
+        transparent: true, // Enable translucent background
+        hasShadow: true, // Enable shadow for better visibility
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
@@ -161,3 +163,4 @@ app.on('activate', () => {
         createWindow();
     }
 });
+
