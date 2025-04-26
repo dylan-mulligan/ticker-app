@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 let mainWindow;
+const chartWindows = {}; // Store references to chart windows
 const isMockMode = true; // Check if mock mode is enabled
 const boundsFile = path.join(app.getPath('userData'), 'windowBounds.json'); // File to store window bounds
 
@@ -105,10 +106,46 @@ function createChartWindow(ticker, currency, chartType) {
     const chartUrl = `${baseUrl}/${ticker}-${currency}?chartType=${chartType}`;
 
     chartWindow.loadURL(chartUrl);
+
+    // Use `ticker-currency` as the key
+    const windowKey = `${ticker}-${currency}`;
+    chartWindows[windowKey] = chartWindow;
+
+    chartWindow.on('closed', () => {
+        delete chartWindows[windowKey]; // Remove reference when closed
+    });
 }
 
+// Handle opening a chart window
 ipcMain.on('open-chart-window', (event, { ticker, currency, chartType }) => {
     createChartWindow(ticker, currency, chartType);
+});
+
+// Handle setting chart window always on top
+ipcMain.on('set-chart-always-on-top', (event, { ticker, currency, isAlwaysOnTop }) => {
+    const windowKey = `${ticker}-${currency}`;
+    const chartWindow = chartWindows[windowKey];
+    if (chartWindow) {
+        chartWindow.setAlwaysOnTop(isAlwaysOnTop);
+    }
+});
+
+// Handle setting initial always-on-top state for chart windows
+ipcMain.on('set-chart-initial-always-on-top', (event, { ticker, currency, isAlwaysOnTop }) => {
+    const windowKey = `${ticker}-${currency}`;
+    const chartWindow = chartWindows[windowKey];
+    if (chartWindow) {
+        chartWindow.setAlwaysOnTop(isAlwaysOnTop);
+    }
+});
+
+// Handle closing a specific chart window
+ipcMain.on('close-chart-window', (event, { ticker, currency }) => {
+    const windowKey = `${ticker}-${currency}`;
+    const chartWindow = chartWindows[windowKey];
+    if (chartWindow) {
+        chartWindow.close();
+    }
 });
 
 app.whenReady().then(createWindow);

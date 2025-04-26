@@ -2,33 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import { Close, PushPin, PushPinOutlined } from '@mui/icons-material';
 
-const ChartGrabBar: React.FC = () => {
+const ChartGrabBar: React.FC<{ ticker: string; currency: string }> = ({ ticker, currency }) => {
   const [alwaysOnTop, setAlwaysOnTop] = useState(false);
 
   useEffect(() => {
     // Initialize alwaysOnTop from localStorage
-    const savedAlwaysOnTop = localStorage.getItem('alwaysOnTop');
+    const savedAlwaysOnTop = localStorage.getItem(`${ticker}-${currency}-alwaysOnTop`);
     if (savedAlwaysOnTop !== null) {
       const alwaysOnTopState = savedAlwaysOnTop === 'true';
       setAlwaysOnTop(alwaysOnTopState);
       if ((window as any).electronAPI) {
-        (window as any).electronAPI.setInitialAlwaysOnTop(alwaysOnTopState);
+        (window as any).electronAPI.setChartInitialAlwaysOnTop(ticker, currency, alwaysOnTopState);
       }
     }
-  }, []);
+  }, [ticker, currency]);
 
   const handleAlwaysOnTopToggle = () => {
     const newAlwaysOnTop = !alwaysOnTop;
     setAlwaysOnTop(newAlwaysOnTop);
-    localStorage.setItem('alwaysOnTop', newAlwaysOnTop.toString());
+    localStorage.setItem(`${ticker}-${currency}-alwaysOnTop`, newAlwaysOnTop.toString());
     if ((window as any).electronAPI) {
-      (window as any).electronAPI.setAlwaysOnTop(newAlwaysOnTop);
+      (window as any).electronAPI.setChartAlwaysOnTop(ticker, currency, newAlwaysOnTop);
     }
   };
 
   const handleClose = () => {
     if ((window as any).electronAPI) {
-      (window as any).electronAPI.closeWindow();
+      (window as any).electronAPI.closeChartWindow(ticker, currency);
     }
   };
 
@@ -46,7 +46,7 @@ const ChartGrabBar: React.FC = () => {
       }}
     >
       <Typography variant="body2" sx={{ WebkitAppRegion: 'no-drag' }}>
-        Chart Windows
+        {`${ticker.toUpperCase()} - ${currency.toUpperCase()}`}
       </Typography>
       <Box sx={{ display: 'flex', gap: 1, WebkitAppRegion: 'no-drag' }}>
         <IconButton

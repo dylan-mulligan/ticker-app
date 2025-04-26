@@ -18,7 +18,7 @@ const chartType = urlParams.get('chartType');
 // Handle the `ticker-currency` format from Electron's chart window
 if (!ticker || !currency) {
   const pathParts = window.location.pathname.split('-');
-  if (pathParts.length === 2) {
+  if (pathParts.length >= 2) {
     ticker = pathParts[0].replace('/', ''); // Remove leading slash
     currency = pathParts[1];
   }
@@ -27,13 +27,15 @@ if (!ticker || !currency) {
 if (ticker && currency && chartType) {
   ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
-        <ChartGrabBar/>
-      <TickerChartContainer
-        ticker={ticker}
-        currency={currency}
-        fetchData={true}
-        daysToDisplay={14}
-      />
+      <div>
+        <ChartGrabBar ticker={ticker} currency={currency} />
+        <TickerChartContainer
+          ticker={ticker}
+          currency={currency}
+          fetchData={true}
+          daysToDisplay={14}
+        />
+      </div>
     </React.StrictMode>
   );
 } else {
