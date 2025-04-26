@@ -10,9 +10,18 @@ if (typeof window !== 'undefined' && typeof window.require === 'undefined' && ty
 }
 
 const urlParams = new URLSearchParams(window.location.search);
-const ticker = urlParams.get('ticker');
-const currency = urlParams.get('currency');
+let ticker = urlParams.get('ticker');
+let currency = urlParams.get('currency');
 const chartType = urlParams.get('chartType');
+
+// Handle the `ticker-currency` format from Electron's chart window
+if (!ticker || !currency) {
+  const pathParts = window.location.pathname.split('-');
+  if (pathParts.length === 2) {
+    ticker = pathParts[0].replace('/', ''); // Remove leading slash
+    currency = pathParts[1];
+  }
+}
 
 if (ticker && currency && chartType) {
   ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
@@ -37,4 +46,3 @@ if (ticker && currency && chartType) {
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-

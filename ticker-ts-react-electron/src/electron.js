@@ -100,10 +100,10 @@ function createChartWindow(ticker, currency, chartType) {
         },
     });
 
-    chartWindow.loadURL(
-        process.env.ELECTRON_START_URL ||
-        `file://${path.join(__dirname, 'build', 'index.html')}?ticker=${ticker}&currency=${currency}&chartType=${chartType}`
-    );
+    const baseUrl = process.env.ELECTRON_START_URL || `file://${path.join(__dirname, 'build', 'index.html')}`;
+    const chartUrl = `${baseUrl}/${ticker}-${currency}?chartType=${chartType}`; // Include chartType in query params
+
+    chartWindow.loadURL(chartUrl);
 }
 
 ipcMain.on('open-chart-window', (event, { ticker, currency, chartType }) => {
@@ -123,4 +123,3 @@ app.on('activate', () => {
         createWindow();
     }
 });
-
