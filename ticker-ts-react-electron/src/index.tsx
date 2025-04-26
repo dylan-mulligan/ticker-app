@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './css/index.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
-import TickerChartContainer from './components/TickerChartContainer';
-import ChartGrabBar from "./components/ChartGrabBar";
+import MiniChartWindow from './components/MiniChartWindow';
 
 if (typeof window !== 'undefined' && typeof window.require === 'undefined' && typeof require !== 'undefined') {
   window.require = require; // Expose require for Electron detection
@@ -24,28 +23,18 @@ if (!ticker || !currency) {
   }
 }
 
-if (ticker && currency && chartType) {
-  ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
-      <div>
-        <ChartGrabBar ticker={ticker} currency={currency} />
-        <TickerChartContainer
-          ticker={ticker}
-          currency={currency}
-          fetchData={true}
-          daysToDisplay={7}
-          isMini={true}
-        />
-      </div>
+      {(ticker && currency && chartType) ?
+          <MiniChartWindow
+              ticker={ticker ?? ''}
+              currency={currency ?? ''}
+              chartType={chartType ?? ''}
+          /> :
+          <App />
+      }
     </React.StrictMode>
-  );
-} else {
-  ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-}
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import { Close, PushPin, PushPinOutlined } from '@mui/icons-material';
 
-const ChartGrabBar: React.FC<{ ticker: string; currency: string }> = ({ ticker, currency }) => {
+const ChartGrabBar: React.FC<{ ticker: string; currency: string; isHovered: boolean }> = ({ ticker, currency, isHovered }) => {
   const [alwaysOnTop, setAlwaysOnTop] = useState(false);
 
   useEffect(() => {
@@ -41,8 +41,9 @@ const ChartGrabBar: React.FC<{ ticker: string; currency: string }> = ({ ticker, 
         backgroundColor: '#333',
         color: 'white',
         height: '30px',
-        WebkitAppRegion: 'drag',
         padding: '0 8px',
+        opacity: isHovered ? 1 : 0,
+        WebkitAppRegion: isHovered ? 'drag' : 'none',
       }}
     >
       <Typography variant="body2" sx={{ WebkitAppRegion: 'no-drag' }}>
