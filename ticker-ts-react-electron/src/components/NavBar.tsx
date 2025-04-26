@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     AppBar, Toolbar, Typography, Select,
-    MenuItem, Box, IconButton
+    MenuItem, Box, IconButton, FormControlLabel, Checkbox
 } from '@mui/material';
 import { ShowChart, Brightness4, Brightness7 } from '@mui/icons-material'; // Import icons
 import { currencyIconMap } from '../utils/currencyIconMap'; // Import the map
@@ -14,6 +14,21 @@ interface NavBarProps {
 }
 
 const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDarkMode }) => {
+  const [isElectron, setIsElectron] = useState(false);
+  const [alwaysOnTop, setAlwaysOnTop] = useState(false);
+
+  useEffect(() => {
+    // Check if running in Electron
+    setIsElectron(typeof window !== 'undefined' && (window as any).electronAPI?.isElectron);
+  }, []);
+
+  const handleAlwaysOnTopChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAlwaysOnTop(event.target.checked);
+    if (isElectron && (window as any).electronAPI) {
+      (window as any).electronAPI.setAlwaysOnTop(event.target.checked);
+    }
+  };
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -48,6 +63,18 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
           >
             {darkMode ? <Brightness7 /> : <Brightness4 />} {/* Switch icons */}
           </IconButton>
+          {isElectron && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={alwaysOnTop}
+                  onChange={handleAlwaysOnTopChange}
+                  sx={{ color: 'white' }}
+                />
+              }
+              label={<Typography variant="body2" sx={{ color: 'white' }}>Always on Top</Typography>}
+            />
+          )}
         </Box>
       </Toolbar>
     </AppBar>
@@ -55,4 +82,3 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
 };
 
 export default NavBar;
-

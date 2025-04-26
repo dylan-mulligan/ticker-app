@@ -51,6 +51,12 @@ function createWindow() {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
+
+    ipcMain.on('set-always-on-top', (event, isAlwaysOnTop) => {
+        if (mainWindow) {
+            mainWindow.setAlwaysOnTop(isAlwaysOnTop);
+        }
+    });
 }
 
 app.whenReady().then(createWindow);

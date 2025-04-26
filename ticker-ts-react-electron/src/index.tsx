@@ -4,6 +4,10 @@ import './css/index.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 
+if (typeof window !== 'undefined' && typeof window.require === 'undefined' && typeof require !== 'undefined') {
+  window.require = require; // Expose require for Electron detection
+}
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
