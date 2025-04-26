@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, CssBaseline, createTheme, ThemeProvider } from '@mui/material';
+import { Box, CssBaseline, createTheme, ThemeProvider, Typography } from '@mui/material';
 import TickerChartContainer from './TickerChartContainer';
 import NavBar from './NavBar';
 import ChartSelectionBox from './ChartSelectionBox'; // Import the new component
@@ -9,6 +9,7 @@ function App() {
   const [selectedTickers, setSelectedTickers] = useState<string[]>(['bitcoin']);
   const [selectedStocks, setSelectedStocks] = useState<string[]>([]);
   const [darkMode, setDarkMode] = useState(false); // Add dark mode state
+  const [daysToDisplay, setDaysToDisplay] = useState(14); // Add state for daysToDisplay
 
   const theme = createTheme({
     palette: {
@@ -53,6 +54,7 @@ function App() {
                 currency={currency}
                 fetchData={true}
                 delay={index * 2000}
+                daysToDisplay={daysToDisplay} // Pass daysToDisplay to TickerChartContainer
               />
             ))}
           </Box>
@@ -63,4 +65,3 @@ function App() {
 }
 
 export default App;
-
