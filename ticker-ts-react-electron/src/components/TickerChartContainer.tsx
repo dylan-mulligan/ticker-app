@@ -10,7 +10,8 @@ interface TickerChartContainerProps {
   ticker: string;
   currency: string;
   fetchData: boolean;
-  daysToDisplay: number; // Add daysToDisplay prop
+  daysToDisplay: number;
+  isMini?: boolean; // Add optional isMini prop
 }
 
 // Shared request queue to manage API calls
@@ -49,6 +50,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
   currency,
   fetchData,
   daysToDisplay,
+  isMini = false, // Default to false
 }) => {
   const [labels, setLabels] = useState<string[]>([]);
   const [prices, setPrices] = useState<number[]>([]);
@@ -134,39 +136,102 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         border: '1px solid #ccc',
         borderRadius: '8px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        p: 3,
-        width: 'min-content',
-        backgroundColor: 'rgba(161,161,161,0.39)', // Added background color for transparency support
+        p: isMini ? 1 : 3, // Adjust padding for mini mode
+        width: isMini ? 400 : 'min-content', // Adjust width for mini mode
+        height: isMini ? 250 : 'auto', // Set fixed height for mini mode
+        backgroundColor: 'rgba(161,161,161,0.39)',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: isMini ? 'space-between' : 'flex-start', // Adjust layout for mini mode
       }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6" sx={{ textAlign: 'center', marginBottom: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-          {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
-        </Typography>
-        <IconButton onClick={openInNewWindow} title="Open in new window">
-          <OpenInNew />
-        </IconButton>
-      </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 2 }}>
-        <PriceDisplay ticker={ticker} currentPrice={currentPrice} currency={currency} />
-        <Box sx={{ width: 175, marginTop: 0.5 }}>
-          <Typography>Days to Display</Typography>
-          <Slider
-            value={localDaysToDisplay}
-            onChange={(event, value) => setDaysToDisplay(value as number)}
-            min={1}
-            max={30}
-            valueLabelDisplay="auto"
-          />
+      {!isMini && (
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography
+            variant="h6"
+            sx={{
+              textAlign: 'center',
+              marginBottom: 2,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+            }}
+          >
+            {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
+          </Typography>
+          <IconButton onClick={openInNewWindow} title="Open in new window">
+            <OpenInNew />
+          </IconButton>
         </Box>
-        <Button variant="contained" onClick={cycleChartType} sx={{ marginBottom: 2, borderRadius: 2 }}>
+      )}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row', // Stack elements in mini mode
+          justifyContent: 'space-between',
+          gap: 2,
+          alignItems: isMini ? 'center' : 'flex-start',
+          pl: isMini ? 1 : 0,
+          pr: isMini ? 1 : 0,
+        }}
+      >
+        <PriceDisplay
+          ticker={ticker}
+          currentPrice={currentPrice}
+          currency={currency}
+          sx={{
+            fontSize: isMini ? '0.9rem' : '1rem', // Smaller font size for mini mode
+            textAlign: isMini ? 'center' : 'left',
+          }}
+        />
+        {!isMini && (
+          <Box sx={{ width: 175, marginTop: 0.5 }}>
+            <Typography>Days to Display</Typography>
+            <Slider
+              value={localDaysToDisplay}
+              onChange={(event, value) => setDaysToDisplay(value as number)}
+              min={1}
+              max={30}
+              valueLabelDisplay="auto"
+            />
+          </Box>
+        )}
+        <Button
+          variant="contained"
+          onClick={cycleChartType}
+          sx={{
+            marginBottom: isMini ? 0 : 2,
+            borderRadius: 2,
+            padding: isMini ? '4px' : '8px', // Smaller button for mini mode
+            minWidth: isMini ? 'auto' : undefined,
+          }}
+        >
           {getChartIcon()}
         </Button>
       </Box>
-      <Chart ticker={ticker} currency={currency} labels={labels} prices={prices} chartType={chartType} />
+      <Chart
+        ticker={ticker}
+        currency={currency}
+        labels={labels}
+        prices={prices}
+        chartType={chartType}
+      />
+      {isMini && (
+        <Typography
+          variant="caption"
+          sx={{
+            textAlign: 'center',
+            marginTop: 1,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
+        </Typography>
+      )}
     </Box>
   );
 };
 
 export default TickerChartContainer;
-

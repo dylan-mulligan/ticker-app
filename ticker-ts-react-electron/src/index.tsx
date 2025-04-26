@@ -34,6 +34,7 @@ if (ticker && currency && chartType) {
           currency={currency}
           fetchData={true}
           daysToDisplay={14}
+          isMini={true}
         />
       </div>
     </React.StrictMode>

@@ -91,8 +91,8 @@ function createWindow() {
 
 function createChartWindow(ticker, currency, chartType) {
     const chartWindow = new BrowserWindow({
-        width: 500,
-        height: 600,
+        width: 450,
+        height: 300,
         frame: false, // Disable default frame
         transparent: true, // Enable translucent background
         hasShadow: true, // Enable shadow for better visibility
