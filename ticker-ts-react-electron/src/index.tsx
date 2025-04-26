@@ -4,6 +4,7 @@ import './css/index.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 import TickerChartContainer from './components/TickerChartContainer';
+import ChartGrabBar from "./components/ChartGrabBar";
 
 if (typeof window !== 'undefined' && typeof window.require === 'undefined' && typeof require !== 'undefined') {
   window.require = require; // Expose require for Electron detection
@@ -26,6 +27,7 @@ if (!ticker || !currency) {
 if (ticker && currency && chartType) {
   ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
+        <ChartGrabBar/>
       <TickerChartContainer
         ticker={ticker}
         currency={currency}

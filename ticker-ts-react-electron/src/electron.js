@@ -90,8 +90,9 @@ function createWindow() {
 
 function createChartWindow(ticker, currency, chartType) {
     const chartWindow = new BrowserWindow({
-        width: 400,
-        height: 300,
+        width: 500,
+        height: 600,
+        frame: false, // Disable default frame
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
@@ -101,7 +102,7 @@ function createChartWindow(ticker, currency, chartType) {
     });
 
     const baseUrl = process.env.ELECTRON_START_URL || `file://${path.join(__dirname, 'build', 'index.html')}`;
-    const chartUrl = `${baseUrl}/${ticker}-${currency}?chartType=${chartType}`; // Include chartType in query params
+    const chartUrl = `${baseUrl}/${ticker}-${currency}?chartType=${chartType}`;
 
     chartWindow.loadURL(chartUrl);
 }

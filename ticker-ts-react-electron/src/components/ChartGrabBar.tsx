@@ -1,0 +1,71 @@
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, IconButton } from '@mui/material';
+import { Close, PushPin, PushPinOutlined } from '@mui/icons-material';
+
+const ChartGrabBar: React.FC = () => {
+  const [alwaysOnTop, setAlwaysOnTop] = useState(false);
+
+  useEffect(() => {
+    // Initialize alwaysOnTop from localStorage
+    const savedAlwaysOnTop = localStorage.getItem('alwaysOnTop');
+    if (savedAlwaysOnTop !== null) {
+      const alwaysOnTopState = savedAlwaysOnTop === 'true';
+      setAlwaysOnTop(alwaysOnTopState);
+      if ((window as any).electronAPI) {
+        (window as any).electronAPI.setInitialAlwaysOnTop(alwaysOnTopState);
+      }
+    }
+  }, []);
+
+  const handleAlwaysOnTopToggle = () => {
+    const newAlwaysOnTop = !alwaysOnTop;
+    setAlwaysOnTop(newAlwaysOnTop);
+    localStorage.setItem('alwaysOnTop', newAlwaysOnTop.toString());
+    if ((window as any).electronAPI) {
+      (window as any).electronAPI.setAlwaysOnTop(newAlwaysOnTop);
+    }
+  };
+
+  const handleClose = () => {
+    if ((window as any).electronAPI) {
+      (window as any).electronAPI.closeWindow();
+    }
+  };
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: '#333',
+        color: 'white',
+        height: '30px',
+        WebkitAppRegion: 'drag',
+        padding: '0 8px',
+      }}
+    >
+      <Typography variant="body2" sx={{ WebkitAppRegion: 'no-drag' }}>
+        Chart Windows
+      </Typography>
+      <Box sx={{ display: 'flex', gap: 1, WebkitAppRegion: 'no-drag' }}>
+        <IconButton
+          sx={{ color: 'white', padding: '4px' }}
+          onClick={handleAlwaysOnTopToggle}
+          title="Toggle Always on Top"
+        >
+          {alwaysOnTop ? <PushPin /> : <PushPinOutlined />}
+        </IconButton>
+        <IconButton
+          sx={{ color: 'white', padding: '4px' }}
+          onClick={handleClose}
+          title="Close Window"
+        >
+          <Close />
+        </IconButton>
+      </Box>
+    </Box>
+  );
+};
+
+export default ChartGrabBar;
