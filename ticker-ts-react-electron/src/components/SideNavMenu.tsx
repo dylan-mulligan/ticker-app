@@ -15,7 +15,14 @@ const SideNavMenu: React.FC = () => {
 
   return (
     <>
-      <IconButton onClick={toggleDrawer}>
+      <IconButton 
+        onClick={toggleDrawer} 
+        sx={{ 
+          color: 'white', 
+          backgroundColor: 'transparent', 
+          borderRadius: 0
+        }}
+      >
         <MenuIcon />
       </IconButton>
       <Drawer anchor="right" open={isOpen} onClose={toggleDrawer}>
@@ -41,3 +48,4 @@ const SideNavMenu: React.FC = () => {
 };
 
 export default SideNavMenu;
+

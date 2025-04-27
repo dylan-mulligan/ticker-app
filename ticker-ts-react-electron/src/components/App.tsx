@@ -85,20 +85,41 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box>
-        <CustomToolbar
-          currency={currency}
-          setCurrency={setCurrency}
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-        />
-        <NavBar
-          currency={currency}
-          setCurrency={setCurrency}
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-        />
-        <Box sx={{ textAlign: 'center', p: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100vh', // Full viewport height
+          overflow: 'hidden', // Prevent scrolling on the entire container
+        }}
+      >
+        <Box
+          sx={{
+            position: 'sticky',
+            top: 0,
+            zIndex: 10,
+          }}
+        >
+          <CustomToolbar
+            currency={currency}
+            setCurrency={setCurrency}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+          />
+          <NavBar
+            currency={currency}
+            setCurrency={setCurrency}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+          />
+        </Box>
+        <Box
+          sx={{
+            flex: 1,
+            overflowY: 'auto', // Enable scrolling for the body content
+            padding: 2,
+          }}
+        >
           <ChartSelectionBox
             selectedTickers={selectedTickers}
             selectedStocks={selectedStocks}
@@ -132,3 +153,4 @@ function App() {
 }
 
 export default App;
+

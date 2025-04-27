@@ -81,7 +81,7 @@ const CustomToolbar: React.FC<{
         justifyContent: 'space-between',
         backgroundColor: '#333',
         color: 'white',
-        padding: '0.5rem 1rem',
+        pl: 1,
         WebkitAppRegion: 'drag',
         height: '40px',
       }}
@@ -113,20 +113,55 @@ const CustomToolbar: React.FC<{
             </MenuItem>
           ))}
         </Select>
-        <IconButton sx={{ color: 'white' }} onClick={handleAlwaysOnTopToggle}>
+        <IconButton 
+          sx={{ 
+            color: 'white', 
+            backgroundColor: 'transparent', 
+            borderRadius: 0
+          }} 
+          onClick={handleAlwaysOnTopToggle}
+        >
           {alwaysOnTop ? <PushPin /> : <PushPinOutlined />}
         </IconButton>
-        <IconButton sx={{ color: 'white' }} onClick={handleDarkModeToggle}>
+        <IconButton 
+          sx={{ 
+            color: 'white', 
+            backgroundColor: 'transparent', 
+            borderRadius: 0
+          }} 
+          onClick={handleDarkModeToggle}
+        >
           {darkMode ? <Brightness7 /> : <Brightness4 />}
         </IconButton>
         <SideNavMenu />
-        <IconButton onClick={handleMinimize} sx={{ color: 'white' }}>
+        <IconButton 
+          onClick={handleMinimize} 
+          sx={{ 
+            color: 'white', 
+            backgroundColor: 'transparent', 
+            borderRadius: 0 // Make the background square
+          }}
+        >
           <Minimize />
         </IconButton>
-        <IconButton onClick={handleMaximize} sx={{ color: 'white' }}>
+        <IconButton 
+          onClick={handleMaximize} 
+          sx={{ 
+            color: 'white', 
+            backgroundColor: 'transparent', 
+            borderRadius: 0 // Make the background square
+          }}
+        >
           <CropSquare />
         </IconButton>
-        <IconButton onClick={handleClose} sx={{ color: 'white' }}>
+        <IconButton 
+          onClick={handleClose} 
+          sx={{ 
+            color: 'white', 
+            backgroundColor: 'transparent', 
+            borderRadius: 0 // Make the background square
+          }}
+        >
           <Close />
         </IconButton>
       </Box>
@@ -135,4 +170,3 @@ const CustomToolbar: React.FC<{
 };
 
 export default CustomToolbar;
-
