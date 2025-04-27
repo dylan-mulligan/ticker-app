@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Box, Button, Slider, Typography } from '@mui/material';
-import { BarChartRounded, ShowChartRounded, AreaChartRounded } from '@mui/icons-material';
 import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react';
 import Chart from '../chart/Chart';
 import PriceDisplay from '../chart/PriceDisplay';
 import MiniChartControls from '../minichart/MiniChartControls';
 import { ChartType, ChartDisplayType } from '../../constants/globalConsts';
+import { getChartIcon } from '../../utils/chartIconUtils';
 
 interface TickerChartContainerProps {
   ticker: string;
@@ -69,20 +69,6 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
   // Cycle through chart types (line, bar, area)
   const cycleChartType = () => {
     setChartType((prevType) => (prevType === 'line' ? 'bar' : prevType === 'bar' ? 'area' : 'line'));
-  };
-
-  // Get the appropriate chart icon based on the chart type
-  const getChartIcon = () => {
-    switch (chartType) {
-      case 'bar':
-        return <BarChartRounded />;
-      case 'area':
-        return <AreaChartRounded />;
-      case 'line':
-        return <ShowChartRounded />;
-      default:
-        return <ShowChartRounded />;
-    }
   };
 
   // Fetch chart data from the API
@@ -158,39 +144,39 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         margin: client === 'browser' ? 0 : 'inherit',
       }}
     >
-      {!isMini && (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography
-            variant="h6"
-            sx={{
-              textAlign: 'center',
-              marginBottom: 2,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1,
-            }}
-          >
-            {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
-          </Typography>
-        </Box>
-      )}
-      {!isMini && (
-        <Box
+      <Box
           sx={{
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'space-between',
-            gap: 2,
+            justifyContent: 'flex-start',
+            gap: isMini ? 1 : 2,
             alignItems: isMini ? 'center' : 'flex-start',
             pl: isMini ? 1 : 0,
             pr: isMini ? 1 : 0,
           }}
-        >
-          <PriceDisplay
-              ticker={ticker}
-              currentPrice={currentPrice}
-              currency={currency}
-          />
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography
+              variant={isMini ? 'subtitle1' : 'h6'}
+              sx={{
+                textAlign: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                marginBottom: isMini ? 0 : 2,
+                width: 'max-content',
+              }}
+          >
+            {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
+          </Typography>
+        </Box>
+        <PriceDisplay
+            ticker={ticker}
+            currentPrice={currentPrice}
+            currency={currency}
+            isMini={isMini}
+        />
+        {!isMini ? (
           <Box sx={{ width: 175, marginTop: 0.5 }}>
             <Typography>Days to Display</Typography>
             <Slider
@@ -201,6 +187,16 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
                 valueLabelDisplay="auto"
             />
           </Box>
+        ) : (
+          <MiniChartControls
+            onRangeChange={handleRangeChange}
+            selectedRange={localDaysToDisplay}
+            onCycleChartType={cycleChartType} // Pass cycleChartType to MiniChartControls
+            currentChartType={chartType} // Pass current chart type
+          />
+        )}
+
+        {!isMini && (
           <Button
             variant="contained"
             onClick={cycleChartType}
@@ -211,10 +207,10 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
               minWidth: isMini ? 'auto' : undefined,
             }}
           >
-            {getChartIcon()}
+            {getChartIcon(chartType, 24)}
           </Button>
-        </Box>
         )}
+      </Box>
       <Chart
         currency={currency}
         labels={labels}
@@ -222,51 +218,6 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         chartType={chartType}
         isMini={isMini}
       />
-      {isMini && (
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 2,
-            justifyContent: 'flex-start',
-            mt: 0
-          }}>
-            <Typography
-                variant="subtitle1"
-                sx={{
-                  textAlign: 'center',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                }}
-            >
-              {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
-            </Typography>
-            <PriceDisplay
-                ticker={ticker}
-                currentPrice={currentPrice}
-                currency={currency}
-                isMini={isMini}
-            />
-            <MiniChartControls
-              onRangeChange={handleRangeChange}
-              selectedRange={localDaysToDisplay}
-            />
-            <Button
-                variant="outlined"
-                onClick={cycleChartType}
-                sx={{
-                  marginBottom: isMini ? 0 : 2,
-                  borderRadius: 2,
-                  padding: isMini ? '4px' : '8px',
-                  minWidth: isMini ? 'auto' : undefined,
-                  backgroundColor: 'rgba(147,163,255,0.13)',
-                }}
-            >
-              {getChartIcon()}
-            </Button>
-          </Box>
-      )}
     </Box>
   );
 };

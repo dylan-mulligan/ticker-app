@@ -86,7 +86,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
   };
 
   return (
-    <Box sx={{ width: '100%', aspectRatio: '16/9', minHeight: '200px' }}>
+    <Box sx={{ width: '100%', aspectRatio: '16/9', minHeight: '80px' }}>
       <ResponsiveContainer>
         {renderChart()}
       </ResponsiveContainer>
