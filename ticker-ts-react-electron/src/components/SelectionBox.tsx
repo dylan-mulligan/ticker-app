@@ -23,7 +23,7 @@ const SelectionBox: React.FC<SelectionBoxProps> = ({
 }) => {
   return (
     <>
-      <Typography variant="h6">{title}</Typography>
+      <Typography sx={{textAlign: 'center', p: 1}} variant="h6">{title}</Typography>
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, flexWrap: 'wrap', justifyContent: 'center' }}>
         {items.map((item) => (
           <Box

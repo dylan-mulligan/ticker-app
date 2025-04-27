@@ -6,6 +6,7 @@ import './css/index.css';
 import reportWebVitals from './reportWebVitals';
 import TickerChartContainer from "./components/TickerChartContainer";
 import MiniChartWindow from "./components/MiniChartWindow";
+import { SUPPORTED_CRYPTOS } from './constants/supportedCryptos'; // Import the shared list
 
 if (typeof window !== 'undefined' && typeof window.require === 'undefined' && typeof require !== 'undefined') {
   window.require = require; // Expose require for Electron detection
@@ -17,9 +18,13 @@ const Settings = () => <div>Settings Page</div>;
 const TickerChartRoute = () => {
   const { ticker } = useParams();
   const [searchParams] = useSearchParams();
-  const currency = (searchParams.get('currency')) || 'usd'; // Ensure type matches
-  const chartType = (searchParams.get('chartType') as 'line' | 'bar' | 'area') || 'line'; // Ensure type matches
-  console.log(ticker);
+  const currency = (searchParams.get('currency')) || 'usd';
+  const chartType = (searchParams.get('chartType') as 'line' | 'bar' | 'area') || 'line';
+
+  if (!ticker || !SUPPORTED_CRYPTOS.includes(ticker.toLowerCase())) {
+    return <div>Error: Unsupported or invalid cryptocurrency ticker.</div>; // Validation
+  }
+
   return (
     <MiniChartWindow ticker={ticker!} currency={currency!} chartType={chartType!}/>
   );
@@ -32,7 +37,7 @@ root.render(
       <Route path="/" element={<App />} />
       <Route path="/account" element={<Account />} />
       <Route path="/settings" element={<Settings />} />
-      <Route path="/:ticker" element={<TickerChartRoute />} />
+      <Route path="/chart/:ticker" element={<TickerChartRoute />} />
     </Routes>
   </Router>
 );

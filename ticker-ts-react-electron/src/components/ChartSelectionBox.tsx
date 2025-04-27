@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, IconButton, Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore, BarChart } from '@mui/icons-material';
 import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react';
-import {createRoot, Root} from "react-dom/client";
 import SelectionBox from './SelectionBox'; // Import the generic SelectionBox component
+import { SUPPORTED_CRYPTOS } from '../constants/supportedCryptos'; // Import the shared list
 
 interface ChartSelectionBoxProps {
   selectedTickers: string[];
@@ -18,8 +18,10 @@ const getCryptoIcon = (ticker: string) => {
       return <IconCurrencyBitcoin size={24} />;
     case 'ethereum':
       return <IconCurrencyEthereum size={24} />;
-    default:
+    case 'dogecoin':
       return <IconCurrencyDogecoin size={24} />;
+    default:
+        return <IconCurrencyBitcoin size={24} />;
   }
 };
 
@@ -75,7 +77,7 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
     const initialHeight = initialWidth / aspectRatio;
 
     const newWindow: any = window.open(
-      `${window.location.origin}/${ticker}?currency=usd&chartType=${chartType}`,
+      `${window.location.origin}/chart/${ticker}?currency=usd&chartType=${chartType}`,
       `${ticker} (${currency})`,
       `width=${initialWidth},height=${initialHeight},left=150,top=150,menubar=no,toolbar=no,location=no,status=no,scrollbars=no,resizable=no`
     );
@@ -110,7 +112,7 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
       </Box>
       <Collapse in={isSelectionBoxOpen}>
         <SelectionBox
-          items={['bitcoin', 'ethereum', 'dogecoin']}
+          items={SUPPORTED_CRYPTOS} // Use the shared list
           selectedItems={selectedTickers}
           onItemChange={onTickerChange}
           openInNewWindow={openInNewWindow}
@@ -133,4 +135,3 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
 };
 
 export default ChartSelectionBox;
-

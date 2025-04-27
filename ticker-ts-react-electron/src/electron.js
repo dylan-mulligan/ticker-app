@@ -105,7 +105,7 @@ function createChartWindow(ticker, currency, chartType) {
     });
 
     const baseUrl = process.env.ELECTRON_START_URL || `file://${path.join(__dirname, 'build', 'index.html')}`;
-    const chartUrl = `${baseUrl}/${ticker}?currency=usd&chartType=${chartType}`;
+    const chartUrl = `${baseUrl}/chart/${ticker}?currency=usd&chartType=${chartType}`;
 
     chartWindow.setAspectRatio(64 / 47);
 
