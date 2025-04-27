@@ -126,10 +126,6 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
     fetchChartData();
   }, [localDaysToDisplay]);
 
-  const openInNewWindow = () => {
-    (window as any).electronAPI.openChartWindow(ticker, currency, chartType);
-  };
-
   const handleRangeChange = (days: number) => {
     setDaysToDisplay(days);
   };
@@ -164,9 +160,6 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
           >
             {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
           </Typography>
-          <IconButton onClick={openInNewWindow} title="Open in new window">
-            <OpenInNew />
-          </IconButton>
         </Box>
       )}
       {!isMini && (
@@ -267,4 +260,3 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 };
 
 export default TickerChartContainer;
-

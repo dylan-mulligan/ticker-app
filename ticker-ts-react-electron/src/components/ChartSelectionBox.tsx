@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, FormGroup, IconButton, Collapse } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { FormControlLabel, Checkbox } from '@mui/material';
-import { BarChart } from '@mui/icons-material';
+import { Box, Typography, IconButton, Collapse } from '@mui/material';
+import { ExpandLess, ExpandMore, BarChart } from '@mui/icons-material';
+import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react';
+import {createRoot, Root} from "react-dom/client";
+import SelectionBox from './SelectionBox'; // Import the generic SelectionBox component
 
 interface ChartSelectionBoxProps {
   selectedTickers: string[];
@@ -11,6 +12,30 @@ interface ChartSelectionBoxProps {
   onStockChange: (stock: string) => void;
 }
 
+const getCryptoIcon = (ticker: string) => {
+  switch (ticker.toLowerCase()) {
+    case 'bitcoin':
+      return <IconCurrencyBitcoin size={24} />;
+    case 'ethereum':
+      return <IconCurrencyEthereum size={24} />;
+    default:
+      return <IconCurrencyDogecoin size={24} />;
+  }
+};
+
+const getStockIcon = (stock: string) => {
+  switch (stock.toUpperCase()) {
+    case 'AAPL':
+      return <BarChart />;
+    case 'GOOGL':
+      return <BarChart />;
+    case 'AMZN':
+      return <BarChart />;
+    default:
+      return <BarChart />;
+  }
+};
+
 const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
   selectedTickers,
   selectedStocks,
@@ -18,12 +43,10 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
   onStockChange,
 }) => {
   const [isSelectionBoxOpen, setIsSelectionBoxOpen] = useState(() => {
-    // Initialize from localStorage or default to true
     const savedState = localStorage.getItem('chartSelectionBoxOpen');
     return savedState !== null ? JSON.parse(savedState) : true;
   });
 
-  // Save the state to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('chartSelectionBoxOpen', JSON.stringify(isSelectionBoxOpen));
   }, [isSelectionBoxOpen]);
@@ -32,6 +55,38 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
     setIsSelectionBoxOpen((prev: any) => !prev);
   };
 
+  const openInNewWindow = (ticker: string, isCrypto: boolean) => {
+    const currency = 'usd'; // Default currency for charts
+    const chartType = 'line'; // Default chart type
+    const type = isCrypto ? 'crypto' : 'stock';
+
+    if ((window as any).electronAPI) {
+      // Electron client
+      (window as any).electronAPI.openChartWindow(ticker, currency, chartType);
+    } else {
+      // Browser client
+      openPopoutWidget(ticker, currency, chartType);
+    }
+  };
+
+  function openPopoutWidget(ticker: string, currency: string, chartType: string): void {
+    const aspectRatio = 128 / 107;
+    const initialWidth = 575;
+    const initialHeight = initialWidth / aspectRatio;
+
+    const newWindow: any = window.open(
+      `${window.location.origin}/${ticker}-${currency}?chartType=${chartType}`,
+      `${ticker} (${currency})`,
+      `width=${initialWidth},height=${initialHeight},left=150,top=150,menubar=no,toolbar=no,location=no,status=no,scrollbars=no,resizable=no`
+    );
+
+    // Ensure the new window has a transparent background
+    newWindow.onload = () => {
+      newWindow.document.body.style.backgroundColor = 'transparent';
+      newWindow.document.body.style.margin = '0'; // Optional: Remove default margin
+    };
+  }
+
   return (
     <Box
       sx={{
@@ -39,14 +94,14 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
         borderRadius: '8px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
         p: 3,
-        maxWidth: 600,
+        maxWidth: 670,
         margin: '0 auto',
         mb: 4,
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <BarChart sx={{ mr: 1 }} /> {/* Added BarChart icon */}
+          <BarChart sx={{ mr: 1 }} />
           <Typography variant="h6">Chart Selection</Typography>
         </Box>
         <IconButton onClick={toggleSelectionBox}>
@@ -54,36 +109,24 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
         </IconButton>
       </Box>
       <Collapse in={isSelectionBoxOpen}>
-        <Typography variant="h6">Cryptocurrencies</Typography>
-        <FormGroup row sx={{ justifyContent: 'center' }}>
-          {['bitcoin', 'ethereum', 'dogecoin'].map((ticker) => (
-            <FormControlLabel
-              key={ticker}
-              control={
-                <Checkbox
-                  checked={selectedTickers.includes(ticker)}
-                  onChange={() => onTickerChange(ticker)}
-                />
-              }
-              label={ticker.charAt(0).toUpperCase() + ticker.slice(1)}
-            />
-          ))}
-        </FormGroup>
-        <Typography variant="h6">Stocks</Typography>
-        <FormGroup row sx={{ justifyContent: 'center' }}>
-          {['AAPL', 'GOOGL', 'AMZN'].map((stock) => (
-            <FormControlLabel
-              key={stock}
-              control={
-                <Checkbox
-                  checked={selectedStocks.includes(stock)}
-                  onChange={() => onStockChange(stock)}
-                />
-              }
-              label={stock}
-            />
-          ))}
-        </FormGroup>
+        <SelectionBox
+          items={['bitcoin', 'ethereum', 'dogecoin']}
+          selectedItems={selectedTickers}
+          onItemChange={onTickerChange}
+          openInNewWindow={openInNewWindow}
+          getItemIcon={getCryptoIcon}
+          title="Cryptocurrencies"
+          isCrypto={true}
+        />
+        <SelectionBox
+          items={['AAPL', 'GOOGL', 'AMZN']}
+          selectedItems={selectedStocks}
+          onItemChange={onStockChange}
+          openInNewWindow={openInNewWindow}
+          getItemIcon={getStockIcon}
+          title="Stocks"
+          isCrypto={false}
+        />
       </Collapse>
     </Box>
   );
