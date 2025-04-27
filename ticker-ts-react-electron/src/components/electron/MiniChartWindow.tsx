@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import TickerChartContainer from './TickerChartContainer';
+import TickerChartContainer from '../shared/TickerChartContainer';
 import MiniChartGrabBar from '../minichart/MiniChartGrabBar';
 import { Box } from "@mui/material";
-import { ChartType } from '../../constants/globalConsts'; // Import ChartType
+import { ChartType } from '../../constants/globalConsts';
 
 const MiniChartWindow: React.FC<{
   ticker: string;

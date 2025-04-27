@@ -5,7 +5,7 @@ import App from './components/App';
 import './css/index.css';
 import reportWebVitals from './reportWebVitals';
 import TickerChartContainer from "./components/shared/TickerChartContainer";
-import MiniChartWindow from "./components/shared/MiniChartWindow";
+import MiniChartWindow from "./components/electron/MiniChartWindow";
 import { SUPPORTED_CRYPTOS, ChartType } from './constants/globalConsts'; // Import the shared list and ChartType
 
 if (typeof window !== 'undefined' && typeof window.require === 'undefined' && typeof require !== 'undefined') {
@@ -25,8 +25,24 @@ const TickerChartRoute = () => {
     return <div>Error: Unsupported or invalid cryptocurrency ticker.</div>; // Validation
   }
 
+  const isElectron = typeof window !== 'undefined' && (window as any).electronAPI?.isElectron;
+
+  if (isElectron) {
+    console.log("Running in Electron");
+    return (
+      <MiniChartWindow ticker={ticker!} currency={currency!} chartType={chartType!} />
+    );
+  }
+
   return (
-    <MiniChartWindow ticker={ticker!} currency={currency!} chartType={chartType!}/>
+    <TickerChartContainer
+      ticker={ticker!}
+      currency={currency!}
+      fetchData={true}
+      daysToDisplay={7}
+      isMini={true}
+      initialChartType={chartType!}
+    />
   );
 };
 
@@ -46,4 +62,3 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-
