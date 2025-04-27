@@ -12,7 +12,7 @@ interface TickerChartContainerProps {
   currency: string;
   fetchData: boolean;
   daysToDisplay: number;
-  isMini?: boolean; // Add optional isMini prop
+  isMini?: boolean;
 }
 
 // Shared request queue to manage API calls
@@ -27,7 +27,7 @@ const processQueue = async () => {
     const nextRequest = requestQueue.shift();
     if (nextRequest) {
       await nextRequest();
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // 2-second delay between requests
+      await new Promise((resolve) => setTimeout(resolve, 2100)); // 2-second delay between requests
     }
   }
 
@@ -51,7 +51,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
   currency,
   fetchData,
   daysToDisplay,
-  isMini = false, // Default to false
+  isMini = false,
 }) => {
   const [labels, setLabels] = useState<string[]>([]);
   const [prices, setPrices] = useState<number[]>([]);
@@ -78,7 +78,9 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 
   // Fetch chart data from the API
   const fetchChartData = async () => {
-    const days = 30; // Total days to query from the API
+    // Total days to query from the API
+    const days = 30;
+
     try {
       const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${ticker}/market_chart`, {
         params: { vs_currency: currency, days },
@@ -137,13 +139,13 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         border: '1px solid #ccc',
         borderRadius: '8px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        p: isMini ? 1 : 3, // Adjust padding for mini mode
-        width: 'auto', // Adjust width for mini mode
-        height: 'auto', // Set fixed height for mini mode
+        p: isMini ? 1 : 3,
+        width: 'auto',
+        height: 'auto',
         backgroundColor: 'rgba(161,161,161,0.39)',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: isMini ? 'space-between' : 'flex-start', // Adjust layout for mini mode
+        justifyContent: isMini ? 'space-between' : 'flex-start',
       }}
     >
       {!isMini && (
@@ -166,7 +168,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'row', // Stack elements in mini mode
+            flexDirection: 'row',
             justifyContent: 'space-between',
             gap: 2,
             alignItems: isMini ? 'center' : 'flex-start',
@@ -195,7 +197,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
             sx={{
               marginBottom: isMini ? 0 : 2,
               borderRadius: 2,
-              padding: isMini ? '4px' : '8px', // Smaller button for mini mode
+              padding: isMini ? '4px' : '8px',
               minWidth: isMini ? 'auto' : undefined,
             }}
           >
@@ -246,7 +248,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
                 sx={{
                   marginBottom: isMini ? 0 : 2,
                   borderRadius: 2,
-                  padding: isMini ? '4px' : '8px', // Smaller button for mini mode
+                  padding: isMini ? '4px' : '8px',
                   minWidth: isMini ? 'auto' : undefined,
                   backgroundColor: 'rgba(147,163,255,0.13)',
                 }}

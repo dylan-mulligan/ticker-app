@@ -57,7 +57,7 @@ function updateAllCharts(currency) {
         .map(checkbox => checkbox.value);
 
     tickers.forEach((ticker, index) => {
-        setTimeout(() => updateChart(ticker, currency), index * 2000); // Space updates at 2.5-second intervals
+        setTimeout(() => updateChart(ticker, currency), index * 2100); // Space updates at 2.5-second intervals
     });
 }
 
