@@ -43,7 +43,7 @@ const ChartGrabBar: React.FC<{ ticker: string; currency: string; isHovered: bool
         height: '30px',
         padding: '0 8px',
         opacity: isHovered ? 1 : 0,
-        WebkitAppRegion: isHovered ? 'drag' : 'none',
+        WebkitAppRegion: 'drag', // isHovered ? 'drag' : 'none'
       }}
     >
       <Typography variant="body2" sx={{ WebkitAppRegion: 'no-drag' }}>

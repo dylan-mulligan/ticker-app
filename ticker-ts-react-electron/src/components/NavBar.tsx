@@ -39,6 +39,7 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
               backgroundColor: 'transparent',
               border: 'none',
               minWidth: 120,
+              height: 45
             }}
           >
             {Object.entries(currencyIconMap).map(([key, symbol]) => (

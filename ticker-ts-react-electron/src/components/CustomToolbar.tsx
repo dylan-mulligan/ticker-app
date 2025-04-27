@@ -73,6 +73,7 @@ const CustomToolbar: React.FC<{
         color: 'white',
         padding: '0.5rem 1rem',
         WebkitAppRegion: 'drag',
+        height: '40px',
       }}
     >
       <Typography variant="h6" sx={{ WebkitAppRegion: 'no-drag' }}>
@@ -88,6 +89,7 @@ const CustomToolbar: React.FC<{
             backgroundColor: 'transparent',
             border: 'none',
             minWidth: 70,
+            height: 30
           }}
         >
           {Object.entries(currencyIconMap).map(([key, symbol]) => (
