@@ -12,6 +12,7 @@ interface TickerChartContainerProps {
   currency: string;
   fetchData: boolean;
   daysToDisplay: number;
+  initialChartType?: 'line' | 'bar' | 'area';
   isMini?: boolean;
 }
 
@@ -51,12 +52,13 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
   currency,
   fetchData,
   daysToDisplay,
+  initialChartType = 'line',
   isMini = false,
 }) => {
   const [labels, setLabels] = useState<string[]>([]);
   const [prices, setPrices] = useState<number[]>([]);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
-  const [chartType, setChartType] = useState<'line' | 'bar' | 'area'>('line');
+  const [chartType, setChartType] = useState<'line' | 'bar' | 'area'>(initialChartType);
   const [localDaysToDisplay, setDaysToDisplay] = useState<number>(daysToDisplay);
 
   // Cycle through chart types (line, bar, area)
@@ -138,11 +140,11 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
       sx={{
         border: '1px solid #ccc',
         borderRadius: '8px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
         p: isMini ? 1 : 3,
         width: 'auto',
         height: 'auto',
-        backgroundColor: 'rgba(161,161,161,0.39)',
+        backgroundColor: 'rgba(161,161,161,0.35)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: isMini ? 'space-between' : 'flex-start',

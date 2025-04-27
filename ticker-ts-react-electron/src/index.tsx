@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client'; // Updated import for React 18
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useParams, useSearchParams } from 'react-router-dom';
 import App from './components/App';
 import './css/index.css';
 import reportWebVitals from './reportWebVitals';
+import TickerChartContainer from "./components/TickerChartContainer";
+import MiniChartWindow from "./components/MiniChartWindow";
 
 if (typeof window !== 'undefined' && typeof window.require === 'undefined' && typeof require !== 'undefined') {
   window.require = require; // Expose require for Electron detection
@@ -12,6 +14,17 @@ if (typeof window !== 'undefined' && typeof window.require === 'undefined' && ty
 const Account = () => <div>Account Page</div>;
 const Settings = () => <div>Settings Page</div>;
 
+const TickerChartRoute = () => {
+  const { ticker } = useParams();
+  const [searchParams] = useSearchParams();
+  const currency = (searchParams.get('currency')) || 'usd'; // Ensure type matches
+  const chartType = (searchParams.get('chartType') as 'line' | 'bar' | 'area') || 'line'; // Ensure type matches
+  console.log(ticker);
+  return (
+    <MiniChartWindow ticker={ticker!} currency={currency!} chartType={chartType!}/>
+  );
+};
+
 const root = ReactDOM.createRoot(document.getElementById('root')!); // Use createRoot
 root.render(
   <Router>
@@ -19,6 +32,7 @@ root.render(
       <Route path="/" element={<App />} />
       <Route path="/account" element={<Account />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/:ticker" element={<TickerChartRoute />} />
     </Routes>
   </Router>
 );

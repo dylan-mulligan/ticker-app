@@ -75,7 +75,7 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
     const initialHeight = initialWidth / aspectRatio;
 
     const newWindow: any = window.open(
-      `${window.location.origin}/${ticker}-${currency}?chartType=${chartType}`,
+      `${window.location.origin}/${ticker}?currency=usd&chartType=${chartType}`,
       `${ticker} (${currency})`,
       `width=${initialWidth},height=${initialHeight},left=150,top=150,menubar=no,toolbar=no,location=no,status=no,scrollbars=no,resizable=no`
     );

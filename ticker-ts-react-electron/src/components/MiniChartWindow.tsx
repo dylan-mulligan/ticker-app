@@ -3,7 +3,11 @@ import TickerChartContainer from './TickerChartContainer';
 import ChartGrabBar from './ChartGrabBar';
 import { Box } from "@mui/material";
 
-const MiniChartWindow: React.FC<{ ticker: string; currency: string; chartType: string }> = ({ ticker, currency, chartType }) => {
+const MiniChartWindow: React.FC<{
+  ticker: string;
+  currency: string;
+  chartType: 'line' | 'bar' | 'area';
+}> = ({ ticker, currency, chartType }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -18,6 +22,7 @@ const MiniChartWindow: React.FC<{ ticker: string; currency: string; chartType: s
         fetchData={true}
         daysToDisplay={7}
         isMini={true}
+        initialChartType={chartType}
       />
     </Box>
   );
