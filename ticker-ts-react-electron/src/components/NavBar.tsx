@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 import { ShowChart, Brightness4, Brightness7 } from '@mui/icons-material';
 import { currencyIconMap } from '../utils/currencyIconMap';
+import SideNavMenu from "./SideNavMenu";
 
 interface NavBarProps {
   currency: string;
@@ -53,6 +54,7 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
           <IconButton sx={{ color: 'white' }} onClick={() => setDarkMode(!darkMode)}>
             {darkMode ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
+          <SideNavMenu />
         </Box>
       </Toolbar>
     </AppBar>

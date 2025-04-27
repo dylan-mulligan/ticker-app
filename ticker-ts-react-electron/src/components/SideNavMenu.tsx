@@ -15,10 +15,10 @@ const SideNavMenu: React.FC = () => {
 
   return (
     <>
-      <IconButton onClick={toggleDrawer} sx={{ position: 'fixed', top: 16, left: 16 }}>
+      <IconButton onClick={toggleDrawer}>
         <MenuIcon />
       </IconButton>
-      <Drawer anchor="left" open={isOpen} onClose={toggleDrawer}>
+      <Drawer anchor="right" open={isOpen} onClose={toggleDrawer}>
         <Box sx={{ width: 250, p: 2 }}>
           <List>
             <ListItem component={Link} to="/" onClick={toggleDrawer}>

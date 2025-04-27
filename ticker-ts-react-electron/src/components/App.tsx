@@ -4,7 +4,6 @@ import TickerChartContainer from './TickerChartContainer';
 import NavBar from './NavBar';
 import ChartSelectionBox from './ChartSelectionBox';
 import CustomToolbar from './CustomToolbar';
-import SideNavMenu from './SideNavMenu';
 
 function App() {
   // State for selected currency
@@ -86,7 +85,6 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <SideNavMenu />
       <Box>
         <CustomToolbar
           currency={currency}

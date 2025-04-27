@@ -10,7 +10,8 @@ import {
   PushPinOutlined,
   ShowChart
 } from '@mui/icons-material';
-import { currencyIconMap } from '../utils/currencyIconMap'; // Import the map
+import { currencyIconMap } from '../utils/currencyIconMap';
+import SideNavMenu from "./SideNavMenu"; // Import the map
 
 const CustomToolbar: React.FC<{ 
   currency: string; 
@@ -112,12 +113,13 @@ const CustomToolbar: React.FC<{
             </MenuItem>
           ))}
         </Select>
-        <IconButton sx={{ color: 'white' }} onClick={handleDarkModeToggle}>
-          {darkMode ? <Brightness7 /> : <Brightness4 />}
-        </IconButton>
         <IconButton sx={{ color: 'white' }} onClick={handleAlwaysOnTopToggle}>
           {alwaysOnTop ? <PushPin /> : <PushPinOutlined />}
         </IconButton>
+        <IconButton sx={{ color: 'white' }} onClick={handleDarkModeToggle}>
+          {darkMode ? <Brightness7 /> : <Brightness4 />}
+        </IconButton>
+        <SideNavMenu />
         <IconButton onClick={handleMinimize} sx={{ color: 'white' }}>
           <Minimize />
         </IconButton>
