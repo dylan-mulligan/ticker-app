@@ -4,8 +4,8 @@ import {
   MenuItem, Box, IconButton
 } from '@mui/material';
 import { ShowChart, Brightness4, Brightness7 } from '@mui/icons-material';
-import { currencyIconMap } from '../utils/currencyIconMap';
-import SideNavMenu from "./SideNavMenu";
+import { currencyIconMap } from '../../utils/currencyIconMap';
+import SideNavMenu from "../shared/SideNavMenu";
 
 interface NavBarProps {
   currency: string;

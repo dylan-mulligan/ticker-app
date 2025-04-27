@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Box, CssBaseline, createTheme, ThemeProvider } from '@mui/material';
-import TickerChartContainer from './TickerChartContainer';
-import NavBar from './NavBar';
-import ChartSelectionBox from './ChartSelectionBox';
-import CustomToolbar from './CustomToolbar';
+import TickerChartContainer from './shared/TickerChartContainer';
+import NavBar from './browser/NavBar';
+import ChartSelectionBox from './chartselection/ChartSelectionBox';
+import CustomToolbar from './electron/CustomToolbar';
 
 function App() {
   // State for selected currency

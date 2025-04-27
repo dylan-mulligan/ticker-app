@@ -3,7 +3,7 @@ import { Box, Typography, IconButton, Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore, BarChart } from '@mui/icons-material';
 import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react';
 import SelectionBox from './SelectionBox'; // Import the generic SelectionBox component
-import { SUPPORTED_CRYPTOS } from '../constants/globalConsts'; // Import the shared list
+import { SUPPORTED_CRYPTOS } from '../../constants/globalConsts'; // Import the shared list
 
 interface ChartSelectionBoxProps {
   selectedTickers: string[];

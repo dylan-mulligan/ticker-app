@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import TickerChartContainer from './TickerChartContainer';
-import ChartGrabBar from './ChartGrabBar';
+import MiniChartGrabBar from '../minichart/MiniChartGrabBar';
 import { Box } from "@mui/material";
-import { ChartType } from '../constants/globalConsts'; // Import ChartType
+import { ChartType } from '../../constants/globalConsts'; // Import ChartType
 
 const MiniChartWindow: React.FC<{
   ticker: string;
@@ -16,7 +16,7 @@ const MiniChartWindow: React.FC<{
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <ChartGrabBar ticker={ticker} currency={currency} isHovered={isHovered} />
+      <MiniChartGrabBar ticker={ticker} currency={currency} isHovered={isHovered} />
       <TickerChartContainer
         ticker={ticker}
         currency={currency}

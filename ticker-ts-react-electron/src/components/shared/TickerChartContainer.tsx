@@ -3,10 +3,10 @@ import axios from 'axios';
 import { Box, Button, Slider, Typography, IconButton } from '@mui/material';
 import { BarChartRounded, ShowChartRounded, AreaChartRounded, OpenInNew } from '@mui/icons-material';
 import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react';
-import Chart from './Chart';
-import PriceDisplay from './PriceDisplay';
-import MiniChartControls from './MiniChartControls';
-import { ChartType } from '../constants/globalConsts'; // Import ChartType
+import Chart from '../chart/Chart';
+import PriceDisplay from '../chart/PriceDisplay';
+import MiniChartControls from '../minichart/MiniChartControls';
+import { ChartType } from '../../constants/globalConsts'; // Import ChartType
 
 interface TickerChartContainerProps {
   ticker: string;

@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Routes, Route, useParams, useSearchParams } fr
 import App from './components/App';
 import './css/index.css';
 import reportWebVitals from './reportWebVitals';
-import TickerChartContainer from "./components/TickerChartContainer";
-import MiniChartWindow from "./components/MiniChartWindow";
+import TickerChartContainer from "./components/shared/TickerChartContainer";
+import MiniChartWindow from "./components/shared/MiniChartWindow";
 import { SUPPORTED_CRYPTOS, ChartType } from './constants/globalConsts'; // Import the shared list and ChartType
 
 if (typeof window !== 'undefined' && typeof window.require === 'undefined' && typeof require !== 'undefined') {

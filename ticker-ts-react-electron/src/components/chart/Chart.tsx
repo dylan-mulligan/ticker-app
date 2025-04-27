@@ -5,8 +5,8 @@ import {
   CartesianGrid, ResponsiveContainer,
   BarChart, Bar, AreaChart, Area,
 } from 'recharts';
-import { currencyIconMap } from '../utils/currencyIconMap';
-import { ChartType } from '../constants/globalConsts'; // Import ChartType
+import { currencyIconMap } from '../../utils/currencyIconMap';
+import { ChartType } from '../../constants/globalConsts'; // Import ChartType
 
 interface ChartProps {
   currency: string;

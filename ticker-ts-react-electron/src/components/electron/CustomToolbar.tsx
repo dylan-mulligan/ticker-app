@@ -10,8 +10,8 @@ import {
   PushPinOutlined,
   ShowChart
 } from '@mui/icons-material';
-import { currencyIconMap } from '../utils/currencyIconMap';
-import SideNavMenu from "./SideNavMenu"; // Import the map
+import { currencyIconMap } from '../../utils/currencyIconMap';
+import SideNavMenu from "../shared/SideNavMenu"; // Import the map
 
 const CustomToolbar: React.FC<{ 
   currency: string; 
