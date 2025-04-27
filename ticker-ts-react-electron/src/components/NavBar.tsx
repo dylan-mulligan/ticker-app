@@ -16,6 +16,7 @@ interface NavBarProps {
 
 const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDarkMode }) => {
   const [isElectron, setIsElectron] = useState(false);
+  const navbarHeight = 56;
 
   useEffect(() => {
     setIsElectron(typeof window !== 'undefined' && (window as any).electronAPI?.isElectron);
@@ -24,8 +25,8 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
   if (isElectron) return null; // Do not render in Electron
 
   return (
-    <AppBar position="static">
-      <Toolbar>
+    <AppBar position="static" sx={{ height: navbarHeight, justifyContent: 'center' }}>
+      <Toolbar sx={{ height: navbarHeight }}>
         <ShowChart sx={{ marginRight: 1 }} />
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
           Ticker App
@@ -54,7 +55,7 @@ const NavBar: React.FC<NavBarProps> = ({ currency, setCurrency, darkMode, setDar
           <IconButton sx={{ color: 'white' }} onClick={() => setDarkMode(!darkMode)}>
             {darkMode ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
-          <SideNavMenu />
+          <SideNavMenu topOffset={navbarHeight} />
         </Box>
       </Toolbar>
     </AppBar>

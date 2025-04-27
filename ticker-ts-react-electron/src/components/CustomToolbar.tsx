@@ -22,6 +22,8 @@ const CustomToolbar: React.FC<{
   const [isElectron, setIsElectron] = useState(false);
   const [alwaysOnTop, setAlwaysOnTop] = useState(false);
 
+  const toolbarHeight = 40; // Define the toolbar height
+
   useEffect(() => {
     setIsElectron(typeof window !== 'undefined' && (window as any).electronAPI?.isElectron);
 
@@ -83,7 +85,7 @@ const CustomToolbar: React.FC<{
         color: 'white',
         pl: 1,
         WebkitAppRegion: 'drag',
-        height: '40px',
+        height: toolbarHeight,
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -133,7 +135,7 @@ const CustomToolbar: React.FC<{
         >
           {darkMode ? <Brightness7 /> : <Brightness4 />}
         </IconButton>
-        <SideNavMenu />
+        <SideNavMenu topOffset={toolbarHeight} />
         <IconButton 
           onClick={handleMinimize} 
           sx={{ 
@@ -170,3 +172,4 @@ const CustomToolbar: React.FC<{
 };
 
 export default CustomToolbar;
+

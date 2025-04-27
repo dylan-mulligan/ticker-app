@@ -6,7 +6,11 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
 
-const SideNavMenu: React.FC = () => {
+interface SideNavMenuProps {
+  topOffset: number;
+}
+
+const SideNavMenu: React.FC<SideNavMenuProps> = ({ topOffset }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -25,7 +29,14 @@ const SideNavMenu: React.FC = () => {
       >
         <MenuIcon />
       </IconButton>
-      <Drawer anchor="right" open={isOpen} onClose={toggleDrawer}>
+      <Drawer
+        anchor="right"
+        open={isOpen}
+        onClose={toggleDrawer}
+        PaperProps={{
+          sx: { top: `${topOffset}px` } // Apply the top offset
+        }}
+      >
         <Box sx={{ width: 250, p: 2 }}>
           <List>
             <ListItem component={Link} to="/" onClick={toggleDrawer}>
@@ -48,4 +59,3 @@ const SideNavMenu: React.FC = () => {
 };
 
 export default SideNavMenu;
-
