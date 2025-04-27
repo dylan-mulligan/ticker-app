@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import TickerChartContainer from './TickerChartContainer';
 import ChartGrabBar from './ChartGrabBar';
 import { Box } from "@mui/material";
+import { ChartType } from '../constants/globalConsts'; // Import ChartType
 
 const MiniChartWindow: React.FC<{
   ticker: string;
   currency: string;
-  chartType: 'line' | 'bar' | 'area';
+  chartType: ChartType; // Use ChartType
 }> = ({ ticker, currency, chartType }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -29,3 +30,4 @@ const MiniChartWindow: React.FC<{
 };
 
 export default MiniChartWindow;
+

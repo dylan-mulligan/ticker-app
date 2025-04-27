@@ -3,7 +3,7 @@ import { Box, Typography, IconButton, Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore, BarChart } from '@mui/icons-material';
 import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react';
 import SelectionBox from './SelectionBox'; // Import the generic SelectionBox component
-import { SUPPORTED_CRYPTOS } from '../constants/supportedCryptos'; // Import the shared list
+import { SUPPORTED_CRYPTOS } from '../constants/globalConsts'; // Import the shared list
 
 interface ChartSelectionBoxProps {
   selectedTickers: string[];
@@ -44,7 +44,7 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
   onTickerChange,
   onStockChange,
 }) => {
-  const [isSelectionBoxOpen, setIsSelectionBoxOpen] = useState(() => {
+  const [isSelectionBoxOpen, setIsSelectionBoxOpen] = useState<boolean>(() => {
     const savedState = localStorage.getItem('chartSelectionBoxOpen');
     return savedState !== null ? JSON.parse(savedState) : true;
   });
@@ -54,7 +54,7 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
   }, [isSelectionBoxOpen]);
 
   const toggleSelectionBox = () => {
-    setIsSelectionBoxOpen((prev: any) => !prev);
+    setIsSelectionBoxOpen((prev) => !prev);
   };
 
   const openInNewWindow = (ticker: string, isCrypto: boolean) => {

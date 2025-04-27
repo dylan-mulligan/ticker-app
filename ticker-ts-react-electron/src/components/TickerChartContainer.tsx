@@ -6,13 +6,14 @@ import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from 
 import Chart from './Chart';
 import PriceDisplay from './PriceDisplay';
 import MiniChartControls from './MiniChartControls';
+import { ChartType } from '../constants/globalConsts'; // Import ChartType
 
 interface TickerChartContainerProps {
   ticker: string;
   currency: string;
   fetchData: boolean;
   daysToDisplay: number;
-  initialChartType?: 'line' | 'bar' | 'area';
+  initialChartType?: ChartType; // Use ChartType
   isMini?: boolean;
 }
 
@@ -58,7 +59,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
   const [labels, setLabels] = useState<string[]>([]);
   const [prices, setPrices] = useState<number[]>([]);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
-  const [chartType, setChartType] = useState<'line' | 'bar' | 'area'>(initialChartType);
+  const [chartType, setChartType] = useState<ChartType>(initialChartType); // Use ChartType
   const [localDaysToDisplay, setDaysToDisplay] = useState<number>(daysToDisplay);
 
   // Cycle through chart types (line, bar, area)
@@ -264,3 +265,4 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 };
 
 export default TickerChartContainer;
+

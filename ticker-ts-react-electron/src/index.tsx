@@ -6,7 +6,7 @@ import './css/index.css';
 import reportWebVitals from './reportWebVitals';
 import TickerChartContainer from "./components/TickerChartContainer";
 import MiniChartWindow from "./components/MiniChartWindow";
-import { SUPPORTED_CRYPTOS } from './constants/supportedCryptos'; // Import the shared list
+import { SUPPORTED_CRYPTOS, ChartType } from './constants/globalConsts'; // Import the shared list and ChartType
 
 if (typeof window !== 'undefined' && typeof window.require === 'undefined' && typeof require !== 'undefined') {
   window.require = require; // Expose require for Electron detection
@@ -19,7 +19,7 @@ const TickerChartRoute = () => {
   const { ticker } = useParams();
   const [searchParams] = useSearchParams();
   const currency = (searchParams.get('currency')) || 'usd';
-  const chartType = (searchParams.get('chartType') as 'line' | 'bar' | 'area') || 'line';
+  const chartType = (searchParams.get('chartType') as ChartType) || 'line'; // Use ChartType
 
   if (!ticker || !SUPPORTED_CRYPTOS.includes(ticker.toLowerCase())) {
     return <div>Error: Unsupported or invalid cryptocurrency ticker.</div>; // Validation
@@ -46,3 +46,4 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+

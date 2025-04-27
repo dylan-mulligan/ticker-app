@@ -6,12 +6,13 @@ import {
   BarChart, Bar, AreaChart, Area,
 } from 'recharts';
 import { currencyIconMap } from '../utils/currencyIconMap';
+import { ChartType } from '../constants/globalConsts'; // Import ChartType
 
 interface ChartProps {
   currency: string;
   labels: string[];
   prices: number[];
-  chartType: 'line' | 'bar' | 'area';
+  chartType: ChartType; // Use ChartType
   isMini?: boolean; // New prop to indicate mini mode or dark mode
 }
 
