@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Box, IconButton, Typography, Select, MenuItem } from '@mui/material';
-import { Close, Minimize, CropSquare, Brightness4, Brightness7, PushPin, PushPinOutlined } from '@mui/icons-material';
+import {
+  Close,
+  Minimize,
+  CropSquare,
+  Brightness4,
+  Brightness7,
+  PushPin,
+  PushPinOutlined,
+  ShowChart
+} from '@mui/icons-material';
 import { currencyIconMap } from '../utils/currencyIconMap'; // Import the map
 
 const CustomToolbar: React.FC<{ 
@@ -76,9 +85,12 @@ const CustomToolbar: React.FC<{
         height: '40px',
       }}
     >
-      <Typography variant="h6" sx={{ WebkitAppRegion: 'no-drag' }}>
-        Ticker App
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <ShowChart sx={{ marginRight: 1 }} />
+        <Typography variant="h6" sx={{ WebkitAppRegion: 'no-drag' }}>
+          Ticker App
+        </Typography>
+      </Box>
       <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', WebkitAppRegion: 'no-drag' }}>
         <Select
           id="currency-select-toolbar"
