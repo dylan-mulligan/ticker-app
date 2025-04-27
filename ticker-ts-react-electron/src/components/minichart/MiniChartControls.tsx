@@ -5,8 +5,8 @@ import { getChartIcon } from '../../utils/chartIconUtils';
 interface MiniChartControlsProps {
   onRangeChange: (days: number) => void;
   selectedRange: number;
-  onCycleChartType: () => void; // New prop for cycling chart type
-  currentChartType: string; // New prop for current chart type
+  onCycleChartType: () => void;
+  currentChartType: string;
 }
 
 const MiniChartControls: React.FC<MiniChartControlsProps> = ({
@@ -17,7 +17,9 @@ const MiniChartControls: React.FC<MiniChartControlsProps> = ({
 }) => {
   const ranges = [3, 7, 14, 30];
   const isSmallScreen = useMediaQuery('(max-width: 472px)');
-  const [currentRangeIndex, setCurrentRangeIndex] = useState(0);
+  const [currentRangeIndex, setCurrentRangeIndex] = useState(
+    ranges.indexOf(selectedRange) !== -1 ? ranges.indexOf(selectedRange) : 0
+  );
 
   const cycleRange = () => {
     const nextIndex = (currentRangeIndex + 1) % ranges.length;
@@ -38,7 +40,7 @@ const MiniChartControls: React.FC<MiniChartControlsProps> = ({
             border: '1px solid',
           }}
         >
-          {ranges[currentRangeIndex]}d
+          {selectedRange}d
         </Button>
       ) : (
         ranges.map((range) => (
@@ -75,4 +77,3 @@ const MiniChartControls: React.FC<MiniChartControlsProps> = ({
 };
 
 export default MiniChartControls;
-

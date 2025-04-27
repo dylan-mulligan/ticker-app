@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Slider, Typography } from '@mui/material';
+import {Box, Button, Slider, Typography} from '@mui/material';
 import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react';
 import Chart from '../chart/Chart';
 import PriceDisplay from '../chart/PriceDisplay';
 import MiniChartControls from '../minichart/MiniChartControls';
 import { ChartType, ChartDisplayType } from '../../constants/globalConsts';
 import { getChartIcon } from '../../utils/chartIconUtils';
+import { getTickerColor } from '../../utils/tickerColorUtils';
 
 interface TickerChartContainerProps {
   ticker: string;
@@ -15,6 +16,7 @@ interface TickerChartContainerProps {
   daysToDisplay: number;
   initialChartType?: ChartType;
   displayType?: ChartDisplayType;
+  darkMode?: boolean; // Optional dark mode prop
 }
 
 // Shared request queue to manage API calls
@@ -56,6 +58,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
   daysToDisplay,
   initialChartType = 'line',
   displayType = 'default',
+  darkMode = false, // Default to false if not provided
 }) => {
   const [labels, setLabels] = useState<string[]>([]);
   const [prices, setPrices] = useState<number[]>([]);
@@ -165,6 +168,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
                 gap: 1,
                 marginBottom: isMini ? 0 : 2,
                 width: 'max-content',
+                color: getTickerColor(ticker, darkMode), // Apply color based on ticker
               }}
           >
             {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
@@ -223,4 +227,3 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 };
 
 export default TickerChartContainer;
-

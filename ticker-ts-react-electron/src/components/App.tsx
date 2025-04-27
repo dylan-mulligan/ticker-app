@@ -143,6 +143,7 @@ function App() {
                 currency={currency}
                 fetchData={true}
                 daysToDisplay={daysToDisplay}
+                darkMode={darkMode}
               />
             ))}
           </Box>
