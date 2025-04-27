@@ -1,39 +1,26 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './css/index.css';
+import ReactDOM from 'react-dom/client'; // Updated import for React 18
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './components/App';
+import './css/index.css';
 import reportWebVitals from './reportWebVitals';
-import MiniChartWindow from './components/MiniChartWindow';
 
 if (typeof window !== 'undefined' && typeof window.require === 'undefined' && typeof require !== 'undefined') {
   window.require = require; // Expose require for Electron detection
 }
 
-const urlParams = new URLSearchParams(window.location.search);
-let ticker = urlParams.get('ticker');
-let currency = urlParams.get('currency');
-const chartType = urlParams.get('chartType');
+const Account = () => <div>Account Page</div>;
+const Settings = () => <div>Settings Page</div>;
 
-// Handle the `ticker-currency` format from Electron's chart window
-if (!ticker || !currency) {
-  const pathParts = window.location.pathname.split('-');
-  if (pathParts.length >= 2) {
-    ticker = pathParts[0].replace('/', ''); // Remove leading slash
-    currency = pathParts[1];
-  }
-}
-
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
-      {(ticker && currency && chartType) ?
-          <MiniChartWindow
-              ticker={ticker ?? ''}
-              currency={currency ?? ''}
-              chartType={chartType ?? ''}
-          /> :
-          <App />
-      }
-    </React.StrictMode>
+const root = ReactDOM.createRoot(document.getElementById('root')!); // Use createRoot
+root.render(
+  <Router>
+    <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="/account" element={<Account />} />
+      <Route path="/settings" element={<Settings />} />
+    </Routes>
+  </Router>
 );
 
 // If you want to start measuring performance in your app, pass a function
