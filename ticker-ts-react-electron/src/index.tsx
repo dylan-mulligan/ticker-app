@@ -6,7 +6,7 @@ import './css/index.css';
 import reportWebVitals from './reportWebVitals';
 import TickerChartContainer from "./components/shared/TickerChartContainer";
 import MiniChartWindow from "./components/electron/MiniChartWindow";
-import { SUPPORTED_CRYPTOS, ChartType } from './constants/globalConsts'; // Import the shared list and ChartType
+import { SUPPORTED_CRYPTOS, ChartType, ChartDisplayType } from './constants/globalConsts'; // Import the shared list, ChartType, and ChartDisplayType
 
 if (typeof window !== 'undefined' && typeof window.require === 'undefined' && typeof require !== 'undefined') {
   window.require = require; // Expose require for Electron detection
@@ -19,18 +19,20 @@ const TickerChartRoute = () => {
   const { ticker } = useParams();
   const [searchParams] = useSearchParams();
   const currency = (searchParams.get('currency')) || 'usd';
-  const chartType = (searchParams.get('chartType') as ChartType) || 'line'; // Use ChartType
+  const chartType = (searchParams.get('chartType') as ChartType) || 'line';
+  const tight = searchParams.get('tight') === 'true';
 
   if (!ticker || !SUPPORTED_CRYPTOS.includes(ticker.toLowerCase())) {
     return <div>Error: Unsupported or invalid cryptocurrency ticker.</div>; // Validation
   }
 
   const isElectron = typeof window !== 'undefined' && (window as any).electronAPI?.isElectron;
+  const type: ChartDisplayType = isElectron ? 'mini-electron' : 'mini-browser';
 
   if (isElectron) {
     console.log("Running in Electron");
     return (
-      <MiniChartWindow ticker={ticker!} currency={currency!} chartType={chartType!} />
+      <MiniChartWindow ticker={ticker!} currency={currency!} chartType={chartType!} type={type} />
     );
   }
 
@@ -40,7 +42,7 @@ const TickerChartRoute = () => {
       currency={currency!}
       fetchData={true}
       daysToDisplay={7}
-      isMini={true}
+      displayType={type} // Pass type instead of isMini and tight
       initialChartType={chartType!}
     />
   );
@@ -62,3 +64,4 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+

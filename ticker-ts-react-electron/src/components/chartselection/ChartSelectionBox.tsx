@@ -72,12 +72,12 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
   };
 
   function openPopoutWidget(ticker: string, currency: string, chartType: string): void {
-    const aspectRatio = 128 / 107;
+    const aspectRatio = 16 / 9;
     const initialWidth = 575;
-    const initialHeight = initialWidth / aspectRatio;
+    const initialHeight = (initialWidth / aspectRatio) + 110;
 
     const newWindow: any = window.open(
-      `${window.location.origin}/chart/${ticker}?currency=usd&chartType=${chartType}`,
+      `${window.location.origin}/chart/${ticker}?currency=usd&chartType=${chartType}&tight=true`,
       `${ticker} (${currency})`,
       `width=${initialWidth},height=${initialHeight},left=150,top=150,menubar=no,toolbar=no,location=no,status=no,scrollbars=no,resizable=no`
     );

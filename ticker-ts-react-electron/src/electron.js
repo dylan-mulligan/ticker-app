@@ -91,11 +91,10 @@ function createWindow() {
 
 function createChartWindow(ticker, currency, chartType) {
     const chartWindow = new BrowserWindow({
-        width: 450,
-        height: 325,
-        frame: false, // Disable default frame
-        transparent: true, // Enable translucent background
-        hasShadow: true, // Enable shadow for better visibility
+        height: 250,
+        frame: false,
+        transparent: true,
+        hasShadow: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
@@ -105,9 +104,9 @@ function createChartWindow(ticker, currency, chartType) {
     });
 
     const baseUrl = process.env.ELECTRON_START_URL || `file://${path.join(__dirname, 'build', 'index.html')}`;
-    const chartUrl = `${baseUrl}/chart/${ticker}?currency=usd&chartType=${chartType}`;
+    const chartUrl = `${baseUrl}/chart/${ticker}?currency=${currency}&chartType=${chartType}`;
 
-    chartWindow.setAspectRatio(64 / 47);
+    chartWindow.setAspectRatio(16 / 9);
 
     chartWindow.loadURL(chartUrl);
 

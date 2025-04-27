@@ -42,7 +42,7 @@ const MiniChartGrabBar: React.FC<{ ticker: string; currency: string; isHovered: 
         color: 'white',
         height: '30px',
         padding: '0 8px',
-        opacity: isHovered ? 1 : 0,
+        opacity: 1, // isHovered ? 1 : 0
         WebkitAppRegion: 'drag', // isHovered ? 'drag' : 'none'
       }}
     >

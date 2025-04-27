@@ -14,5 +14,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
         ipcRenderer.send('set-chart-initial-always-on-top', { ticker, currency, isAlwaysOnTop }),
     closeChartWindow: (ticker, currency) =>
         ipcRenderer.send('close-chart-window', { ticker, currency }),
+    setIgnoreMouseEvents: (ignore) => ipcRenderer.send('set-ignore-mouse-events', ignore),
     isElectron: true,
 });
+

@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Slider, Typography, IconButton } from '@mui/material';
-import { BarChartRounded, ShowChartRounded, AreaChartRounded, OpenInNew } from '@mui/icons-material';
+import { Box, Button, Slider, Typography } from '@mui/material';
+import { BarChartRounded, ShowChartRounded, AreaChartRounded } from '@mui/icons-material';
 import { IconCurrencyBitcoin, IconCurrencyEthereum, IconCurrencyDogecoin } from '@tabler/icons-react';
 import Chart from '../chart/Chart';
 import PriceDisplay from '../chart/PriceDisplay';
 import MiniChartControls from '../minichart/MiniChartControls';
-import { ChartType } from '../../constants/globalConsts'; // Import ChartType
+import { ChartType, ChartDisplayType } from '../../constants/globalConsts';
 
 interface TickerChartContainerProps {
   ticker: string;
   currency: string;
   fetchData: boolean;
   daysToDisplay: number;
-  initialChartType?: ChartType; // Use ChartType
-  isMini?: boolean;
+  initialChartType?: ChartType;
+  displayType?: ChartDisplayType;
 }
 
 // Shared request queue to manage API calls
 const requestQueue: (() => Promise<void>)[] = [];
 let isProcessingQueue = false;
 
+// Function to process the request queue to avoid rate limiting issues
 const processQueue = async () => {
   if (isProcessingQueue) return;
   isProcessingQueue = true;
@@ -29,7 +30,7 @@ const processQueue = async () => {
     const nextRequest = requestQueue.shift();
     if (nextRequest) {
       await nextRequest();
-      await new Promise((resolve) => setTimeout(resolve, 2100)); // 2-second delay between requests
+      await new Promise((resolve) => setTimeout(resolve, 2100));
     }
   }
 
@@ -54,13 +55,16 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
   fetchData,
   daysToDisplay,
   initialChartType = 'line',
-  isMini = false,
+  displayType = 'default',
 }) => {
   const [labels, setLabels] = useState<string[]>([]);
   const [prices, setPrices] = useState<number[]>([]);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
-  const [chartType, setChartType] = useState<ChartType>(initialChartType); // Use ChartType
+  const [chartType, setChartType] = useState<ChartType>(initialChartType);
   const [localDaysToDisplay, setDaysToDisplay] = useState<number>(daysToDisplay);
+
+  const isMini = displayType === 'mini-electron' || displayType === 'mini-browser';
+  const client = displayType.split('-')[1];
 
   // Cycle through chart types (line, bar, area)
   const cycleChartType = () => {
@@ -74,6 +78,8 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         return <BarChartRounded />;
       case 'area':
         return <AreaChartRounded />;
+      case 'line':
+        return <ShowChartRounded />;
       default:
         return <ShowChartRounded />;
     }
@@ -141,14 +147,15 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
       sx={{
         border: '1px solid #ccc',
         borderRadius: '8px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
+        boxShadow: client === 'browser' ? 'none' : '0 4px 8px rgba(0, 0, 0, 0.15)',
         p: isMini ? 1 : 3,
         width: 'auto',
-        height: 'auto',
+        height: isMini ? 'calc(100vh - 50px)' : 'auto',
         backgroundColor: 'rgba(161,161,161,0.35)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: isMini ? 'space-between' : 'flex-start',
+        margin: client === 'browser' ? 0 : 'inherit',
       }}
     >
       {!isMini && (

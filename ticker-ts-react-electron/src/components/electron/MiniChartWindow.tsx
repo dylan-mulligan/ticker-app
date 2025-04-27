@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import TickerChartContainer from '../shared/TickerChartContainer';
 import MiniChartGrabBar from '../minichart/MiniChartGrabBar';
 import { Box } from "@mui/material";
-import { ChartType } from '../../constants/globalConsts';
+import { ChartType, ChartDisplayType } from '../../constants/globalConsts';
 
 const MiniChartWindow: React.FC<{
   ticker: string;
   currency: string;
-  chartType: ChartType; // Use ChartType
-}> = ({ ticker, currency, chartType }) => {
+  chartType: ChartType;
+  type: ChartDisplayType; // Use ChartDisplayType
+}> = ({ ticker, currency, chartType, type }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -22,7 +23,7 @@ const MiniChartWindow: React.FC<{
         currency={currency}
         fetchData={true}
         daysToDisplay={7}
-        isMini={true}
+        displayType={type}
         initialChartType={chartType}
       />
     </Box>
