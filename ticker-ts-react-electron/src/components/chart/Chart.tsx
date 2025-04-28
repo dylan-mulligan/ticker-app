@@ -1,24 +1,66 @@
 import React from 'react';
-import { Box, useTheme } from '@mui/material';
+import { Box, useTheme, Typography } from '@mui/material';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip,
   CartesianGrid, ResponsiveContainer,
   BarChart, Bar, AreaChart, Area,
+  TooltipProps,
 } from 'recharts';
 import { currencyIconMap } from '../../utils/currencyIconMap';
-import { ChartType } from '../../constants/globalConsts'; // Import ChartType
+import { ChartType } from '../../constants/globalConsts';
+import dayjs from 'dayjs';
 
 interface ChartProps {
   currency: string;
   labels: string[];
   prices: number[];
-  chartType: ChartType; // Use ChartType
-  isMini?: boolean; // New prop to indicate mini mode or dark mode
+  chartType: ChartType;
+  isMini: boolean;
+  darkMode: boolean;
 }
 
-const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMini }) => {
-  const theme = useTheme(); // Access the theme object
+// Custom tooltip renderer
+const CustomTooltip: React.FC<TooltipProps<any, any> & { currency: string, darkMode: boolean; }> = ({
+  active,
+  payload,
+  label,
+  currency,
+  coordinate,
+  darkMode,
+}) => {
+  if (active && payload && payload.length && coordinate) {
+    const price = payload[0].value as number;
+    const formattedDate = dayjs(label).format('ddd, MMM D H:mm'); // Format date
+    const currencySymbol = currencyIconMap[currency] || '';
 
+    return (
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 10, // Constant Y position near the top
+          left: coordinate.x, // Follow cursor on X-axis
+          transform: 'translateX(-50%)',
+          pointerEvents: 'none',
+          background: 'transparent',
+          fontSize: '0.875rem',
+          textAlign: 'center',
+          width: 'max-content',
+        }}
+      >
+        <Typography variant="body2" component="span" sx={{ color: darkMode ? '#ffffff' : '#303030' }}>
+          {`${currencySymbol}${price.toFixed(2)}`}
+        </Typography>
+        <Typography variant="body2" component="span" sx={{ color: darkMode ? '#a8a8a8' : '#808080' }}>
+          {`\u00A0\u00A0${formattedDate}`}
+        </Typography>
+      </Box>
+    );
+  }
+
+  return null;
+};
+
+const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMini, darkMode }) => {
   // Prepare data for the chart
   const data = labels.map((label, index) => ({
     date: label,
@@ -26,7 +68,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
   }));
 
   // Determine axis label color based on isMini or dark/light mode
-  const axisLabelColor = (isMini || theme.palette.mode === 'dark') ? '#ffffff' : '#666666';
+  const axisLabelColor = (isMini || darkMode) ? '#ffffff' : '#666666';
 
   // Determine the color of the main chart component (green or red)
   const isPriceIncreasing = prices[prices.length - 1] >= prices[0];
@@ -46,8 +88,8 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               stroke={axisLabelColor}
             />
             <Tooltip
-              formatter={(value: number) => `${currencyIconMap[currency] || ''}${value.toFixed(2)}`}
-              labelFormatter={(label: string) => `Date: ${label}`}
+              content={<CustomTooltip currency={currency} darkMode={darkMode} />}
+              cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
             />
             <Bar dataKey="price" fill={mainColor} />
           </BarChart>
@@ -63,8 +105,8 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               stroke={axisLabelColor}
             />
             <Tooltip
-              formatter={(value: number) => `${currencyIconMap[currency] || ''}${value.toFixed(2)}`}
-              labelFormatter={(label: string) => `Date: ${label}`}
+              content={<CustomTooltip currency={currency} darkMode={darkMode} />}
+              cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
             />
             <Area type="monotone" dataKey="price" stroke={mainColor} fill={mainColor} />
           </AreaChart>
@@ -80,8 +122,8 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               stroke={axisLabelColor}
             />
             <Tooltip
-              formatter={(value: number) => `${currencyIconMap[currency] || ''}${value.toFixed(2)}`}
-              labelFormatter={(label: string) => `Date: ${label}`}
+              content={<CustomTooltip currency={currency} darkMode={darkMode} />}
+              cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
             />
             <Line
               type="monotone"
@@ -105,3 +147,4 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
 };
 
 export default Chart;
+

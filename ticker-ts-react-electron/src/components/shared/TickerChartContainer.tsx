@@ -140,7 +140,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         p: isMini ? 1 : 3,
         width: 'auto',
         height: isMini ? 'calc(100vh - 50px)' : 'auto',
-        backgroundColor: 'rgba(161,161,161,0.35)',
+        backgroundColor: isMini ? 'rgba(161,161,161,0.35)' : 'transparent',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: isMini ? 'space-between' : 'flex-start',
@@ -222,6 +222,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         prices={prices}
         chartType={chartType}
         isMini={isMini}
+        darkMode={darkMode}
       />
     </Box>
   );
