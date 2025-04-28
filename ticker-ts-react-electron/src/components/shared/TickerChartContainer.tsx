@@ -19,11 +19,10 @@ interface TickerChartContainerProps {
   darkMode?: boolean; // Optional dark mode prop
 }
 
-// Shared request queue to manage API calls
+// Shared request queue to manage API calls and avoid rate limiting
 const requestQueue: (() => Promise<void>)[] = [];
 let isProcessingQueue = false;
 
-// Function to process the request queue to avoid rate limiting issues
 const processQueue = async () => {
   if (isProcessingQueue) return;
   isProcessingQueue = true;
@@ -32,7 +31,7 @@ const processQueue = async () => {
     const nextRequest = requestQueue.shift();
     if (nextRequest) {
       await nextRequest();
-      await new Promise((resolve) => setTimeout(resolve, 2100));
+      await new Promise((resolve) => setTimeout(resolve, 2100)); // Delay to prevent rate limiting
     }
   }
 
@@ -58,7 +57,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
   daysToDisplay,
   initialChartType = 'line',
   displayType = 'default',
-  darkMode = false, // Default to false if not provided
+  darkMode = false,
 }) => {
   const [labels, setLabels] = useState<string[]>([]);
   const [prices, setPrices] = useState<number[]>([]);
@@ -76,8 +75,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 
   // Fetch chart data from the API
   const fetchChartData = async () => {
-    // Total days to query from the API
-    const days = 30;
+    const days = 30; // Total days to query from the API
 
     try {
       const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${ticker}/market_chart`, {
@@ -97,7 +95,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 
       // Map filtered data to labels and prices
       const newLabels = filteredData.map((price: [number, number]) =>
-        new Date(price[0]).toISOString() // Use ISO string for labels
+        new Date(price[0]).toISOString()
       );
       const newPrices = filteredData.map((price: [number, number]) => price[1]);
 
@@ -148,56 +146,56 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
       }}
     >
       <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            gap: isMini ? 1 : 2,
-            alignItems: isMini ? 'center' : 'flex-start',
-            pl: isMini ? 1 : 0,
-            pr: isMini ? 1 : 0,
-            mb: 0.5
-          }}
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          gap: isMini ? 1 : 2,
+          alignItems: isMini ? 'center' : 'flex-start',
+          pl: isMini ? 1 : 0,
+          pr: isMini ? 1 : 0,
+          mb: 0.5,
+        }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography
-              variant={isMini ? 'subtitle1' : 'h6'}
-              sx={{
-                textAlign: 'center',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-                marginBottom: isMini ? 0 : 2,
-                width: 'max-content',
-                color: getTickerColor(ticker, darkMode), // Apply color based on ticker
-              }}
+            variant={isMini ? 'subtitle1' : 'h6'}
+            sx={{
+              textAlign: 'center',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              marginBottom: isMini ? 0 : 2,
+              width: 'max-content',
+              color: getTickerColor(ticker, darkMode), // Apply color based on ticker
+            }}
           >
             {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
           </Typography>
         </Box>
         <PriceDisplay
-            ticker={ticker}
-            currentPrice={currentPrice}
-            currency={currency}
-            isMini={isMini}
+          ticker={ticker}
+          currentPrice={currentPrice}
+          currency={currency}
+          isMini={isMini}
         />
         {!isMini ? (
           <Box sx={{ width: 175, marginTop: 0.5 }}>
             <Typography>Days to Display</Typography>
             <Slider
-                value={localDaysToDisplay}
-                onChange={(event, value) => setDaysToDisplay(value as number)}
-                min={1}
-                max={30}
-                valueLabelDisplay="auto"
+              value={localDaysToDisplay}
+              onChange={(event, value) => setDaysToDisplay(value as number)}
+              min={1}
+              max={30}
+              valueLabelDisplay="auto"
             />
           </Box>
         ) : (
           <MiniChartControls
             onRangeChange={handleRangeChange}
             selectedRange={localDaysToDisplay}
-            onCycleChartType={cycleChartType} // Pass cycleChartType to MiniChartControls
-            currentChartType={chartType} // Pass current chart type
+            onCycleChartType={cycleChartType}
+            currentChartType={chartType}
           />
         )}
 

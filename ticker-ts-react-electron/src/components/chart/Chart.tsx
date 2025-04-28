@@ -20,11 +20,11 @@ interface ChartProps {
 }
 
 const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMini, darkMode }) => {
-  const containerRef = useRef<HTMLDivElement>(null); // Reference to the chart container
-  const [containerWidth, setContainerWidth] = useState<number>(0); // State to store container width
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState<number>(0);
 
   useEffect(() => {
-    // Measure the container's width on mount and when resized
+    // Measure the container's width on mount and update on resize
     const updateWidth = () => {
       if (containerRef.current) {
         setContainerWidth(containerRef.current.offsetWidth);
@@ -48,27 +48,27 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
     coordinate,
     darkMode,
   }) => {
-    const tooltipRef = useRef<HTMLDivElement>(null); // Reference for the tooltip element
+    const tooltipRef = useRef<HTMLDivElement>(null);
 
     if (active && payload && payload.length && coordinate) {
       const price = payload[0].value as number;
-      const formattedDate = dayjs(label).format('ddd, MMM D h:mm A'); // Format ISO date to 12-hour time
+      const formattedDate = dayjs(label).format('ddd, MMM D h:mm A'); // Format ISO date to readable format
       const currencySymbol = currencyIconMap[currency] || '';
 
       // Dynamically calculate tooltip width
-      const tooltipWidth = tooltipRef.current?.offsetWidth || 200; // Fallback to 200 if not yet rendered
+      const tooltipWidth = tooltipRef.current?.offsetWidth || 200; // Default to 200 if not rendered yet
       const constrainedLeft = Math.max(
         Math.min(coordinate.x! - (tooltipWidth / 3 - 2), containerWidth - (tooltipWidth + 20)),
-        75 // Ensure it doesn't go beyond the left edge
+        75 // Ensure tooltip doesn't go beyond the left edge
       );
 
       return (
         <Box
-          ref={tooltipRef} // Attach the ref to the tooltip container
+          ref={tooltipRef}
           sx={{
             position: 'absolute',
-            top: 10, // Constant Y position near the top
-            left: constrainedLeft, // Centered X position
+            top: 10, // Fixed Y position near the top
+            left: constrainedLeft,
             pointerEvents: 'none',
             background: 'transparent',
             fontSize: '0.875rem',
@@ -91,23 +91,23 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
 
   // Prepare data for the chart
   const data = labels.map((label, index) => ({
-    date: label, // ISO string
+    date: label,
     price: prices[index],
   }));
 
   const interval = Math.round(labels.length / 5);
 
   // Format function for X-axis labels
-  const formatXAxis = (tick: string) => dayjs(tick).format('MMM D'); // Example: "Jan 1, 12:00"
+  const formatXAxis = (tick: string) => dayjs(tick).format('MMM D');
 
-  // Determine axis label color based on isMini or dark/light mode
+  // Determine axis label color based on `isMini` or dark mode
   const axisLabelColor = (isMini || darkMode) ? '#ffffff' : '#666666';
 
-  // Determine the color of the main chart component (green or red)
+  // Determine the color of the main chart component (green for increasing, red for decreasing)
   const isPriceIncreasing = prices[prices.length - 1] >= prices[0];
-  const mainColor = isPriceIncreasing ? '#4caf50' : '#f44336'; // Green for increasing, red for decreasing
+  const mainColor = isPriceIncreasing ? '#4caf50' : '#f44336';
 
-  // Render the appropriate chart based on the chartType prop
+  // Render the appropriate chart based on the `chartType` prop
   const renderChart = () => {
     const cursorMarginTop = 20; // Margin from the top of the chart for the cursor
 
@@ -117,10 +117,10 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-                dataKey="date"
-                stroke={axisLabelColor}
-                tickFormatter={formatXAxis}
-                interval={interval}
+              dataKey="date"
+              stroke={axisLabelColor}
+              tickFormatter={formatXAxis}
+              interval={interval}
             />
             <YAxis
               domain={['auto', 'auto']}
@@ -139,10 +139,10 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
           <AreaChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-                dataKey="date"
-                stroke={axisLabelColor}
-                tickFormatter={formatXAxis}
-                interval={interval}
+              dataKey="date"
+              stroke={axisLabelColor}
+              tickFormatter={formatXAxis}
+              interval={interval}
             />
             <YAxis
               domain={['auto', 'auto']}
@@ -161,10 +161,10 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-                dataKey="date"
-                stroke={axisLabelColor}
-                tickFormatter={formatXAxis}
-                interval={interval}
+              dataKey="date"
+              stroke={axisLabelColor}
+              tickFormatter={formatXAxis}
+              interval={interval}
             />
             <YAxis
               domain={['auto', 'auto']}
@@ -189,7 +189,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
 
   return (
     <Box
-      ref={containerRef} // Attach the ref to the container
+      ref={containerRef}
       sx={{ width: '100%', aspectRatio: '16/9', minHeight: '80px' }}
     >
       <ResponsiveContainer>
@@ -200,3 +200,4 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
 };
 
 export default Chart;
+
