@@ -137,8 +137,8 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         boxShadow: client === 'browser' ? 'none' : '0 4px 8px rgba(0, 0, 0, 0.15)',
         p: isMini ? 1 : 3,
         width: 'auto',
-        height: isMini ? 'calc(100vh - 50px)' : 'auto',
-        backgroundColor: isMini ? 'rgba(161,161,161,0.35)' : 'transparent',
+        height: (isMini && client === 'electron') ? 'calc(100vh - 50px)' : 'auto',
+        backgroundColor: isMini ? (client === 'electron' ? 'rgba(161,161,161,0.35)' : '#ffffff') : 'transparent',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: isMini ? 'space-between' : 'flex-start',
@@ -167,7 +167,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
               gap: 1,
               marginBottom: isMini ? 0 : 2,
               width: 'max-content',
-              color: getTickerColor(ticker, darkMode), // Apply color based on ticker
+              color: getTickerColor(ticker, (darkMode || client === 'browser')),
             }}
           >
             {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
@@ -221,6 +221,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         chartType={chartType}
         isMini={isMini}
         darkMode={darkMode}
+        client={client}
       />
     </Box>
   );

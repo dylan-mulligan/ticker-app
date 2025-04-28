@@ -17,9 +17,10 @@ interface ChartProps {
   chartType: ChartType;
   isMini: boolean;
   darkMode: boolean;
+  client: string;
 }
 
-const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMini, darkMode }) => {
+const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMini, darkMode, client }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState<number>(0);
 
@@ -101,7 +102,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
   const formatXAxis = (tick: string) => dayjs(tick).format('MMM D');
 
   // Determine axis label color based on `isMini` or dark mode
-  const axisLabelColor = (isMini || darkMode) ? '#ffffff' : '#666666';
+  const axisLabelColor = ((isMini && !(client === 'browser')) || darkMode) ? '#ffffff' : '#666666';
 
   // Determine the color of the main chart component (green for increasing, red for decreasing)
   const isPriceIncreasing = prices[prices.length - 1] >= prices[0];
