@@ -156,6 +156,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
             alignItems: isMini ? 'center' : 'flex-start',
             pl: isMini ? 1 : 0,
             pr: isMini ? 1 : 0,
+            mb: 0.5
           }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

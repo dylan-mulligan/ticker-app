@@ -28,6 +28,10 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
   // Determine axis label color based on isMini or dark/light mode
   const axisLabelColor = (isMini || theme.palette.mode === 'dark') ? '#ffffff' : '#666666';
 
+  // Determine the color of the main chart component (green or red)
+  const isPriceIncreasing = prices[prices.length - 1] >= prices[0];
+  const mainColor = isPriceIncreasing ? '#4caf50' : '#f44336'; // Green for increasing, red for decreasing
+
   // Render the appropriate chart based on the chartType prop
   const renderChart = () => {
     switch (chartType) {
@@ -45,7 +49,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               formatter={(value: number) => `${currencyIconMap[currency] || ''}${value.toFixed(2)}`}
               labelFormatter={(label: string) => `Date: ${label}`}
             />
-            <Bar dataKey="price" fill="#8884d8" />
+            <Bar dataKey="price" fill={mainColor} />
           </BarChart>
         );
       case 'area':
@@ -62,7 +66,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               formatter={(value: number) => `${currencyIconMap[currency] || ''}${value.toFixed(2)}`}
               labelFormatter={(label: string) => `Date: ${label}`}
             />
-            <Area type="monotone" dataKey="price" stroke="#82ca9d" fill="#82ca9d" />
+            <Area type="monotone" dataKey="price" stroke={mainColor} fill={mainColor} />
           </AreaChart>
         );
       default:
@@ -79,7 +83,13 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               formatter={(value: number) => `${currencyIconMap[currency] || ''}${value.toFixed(2)}`}
               labelFormatter={(label: string) => `Date: ${label}`}
             />
-            <Line type="monotone" dataKey="price" stroke="#4bc0c0" strokeWidth={2} />
+            <Line
+              type="monotone"
+              dataKey="price"
+              stroke={mainColor}
+              strokeWidth={3}
+              dot={{ r: .75 }}
+            />
           </LineChart>
         );
     }
@@ -95,4 +105,3 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
 };
 
 export default Chart;
-
