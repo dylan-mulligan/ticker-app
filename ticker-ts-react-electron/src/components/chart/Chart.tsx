@@ -30,7 +30,7 @@ const CustomTooltip: React.FC<TooltipProps<any, any> & { currency: string, darkM
 }) => {
   if (active && payload && payload.length && coordinate) {
     const price = payload[0].value as number;
-    const formattedDate = dayjs(label).format('ddd, MMM D H:mm'); // Format date
+    const formattedDate = dayjs(label).format('ddd, MMM D H:mm'); // Format ISO date
     const currencySymbol = currencyIconMap[currency] || '';
 
     return (
@@ -63,9 +63,14 @@ const CustomTooltip: React.FC<TooltipProps<any, any> & { currency: string, darkM
 const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMini, darkMode }) => {
   // Prepare data for the chart
   const data = labels.map((label, index) => ({
-    date: label,
+    date: label, // ISO string
     price: prices[index],
   }));
+
+  const interval = Math.round(labels.length / 5);
+
+  // Format function for X-axis labels
+  const formatXAxis = (tick: string) => dayjs(tick).format('MMM D'); // Example: "Jan 1, 12:00"
 
   // Determine axis label color based on isMini or dark/light mode
   const axisLabelColor = (isMini || darkMode) ? '#ffffff' : '#666666';
@@ -76,12 +81,18 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
 
   // Render the appropriate chart based on the chartType prop
   const renderChart = () => {
+    console.dir(data);
     switch (chartType) {
       case 'bar':
         return (
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" stroke={axisLabelColor} />
+            <XAxis
+                dataKey="date"
+                stroke={axisLabelColor}
+                tickFormatter={formatXAxis}
+                interval={interval}
+            />
             <YAxis
               domain={['auto', 'auto']}
               tickFormatter={(value) => `${currencyIconMap[currency] || ''}${value}`}
@@ -98,7 +109,12 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
         return (
           <AreaChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" stroke={axisLabelColor} />
+            <XAxis
+                dataKey="date"
+                stroke={axisLabelColor}
+                tickFormatter={formatXAxis}
+                interval={interval}
+            />
             <YAxis
               domain={['auto', 'auto']}
               tickFormatter={(value) => `${currencyIconMap[currency] || ''}${value}`}
@@ -115,7 +131,12 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
         return (
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" stroke={axisLabelColor} />
+            <XAxis
+                dataKey="date"
+                stroke={axisLabelColor}
+                tickFormatter={formatXAxis}
+                interval={interval}
+            />
             <YAxis
               domain={['auto', 'auto']}
               tickFormatter={(value) => `${currencyIconMap[currency] || ''}${value}`}

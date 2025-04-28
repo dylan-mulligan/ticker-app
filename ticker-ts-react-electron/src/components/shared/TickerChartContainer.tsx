@@ -97,7 +97,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 
       // Map filtered data to labels and prices
       const newLabels = filteredData.map((price: [number, number]) =>
-        new Date(price[0]).toLocaleDateString()
+        new Date(price[0]).toISOString() // Use ISO string for labels
       );
       const newPrices = filteredData.map((price: [number, number]) => price[1]);
 
@@ -229,3 +229,4 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
 };
 
 export default TickerChartContainer;
+
