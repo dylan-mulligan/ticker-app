@@ -179,8 +179,8 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               type="monotone"
               dataKey="price"
               stroke={mainColor}
-              strokeWidth={3}
-              dot={{ r: .75 }}
+              strokeWidth={2.5}
+              dot={{ r: 0 }}
             />
           </LineChart>
         );
