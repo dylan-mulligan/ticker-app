@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Box, useTheme, Typography } from '@mui/material';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip,
@@ -19,48 +19,76 @@ interface ChartProps {
   darkMode: boolean;
 }
 
-// Custom tooltip renderer
-const CustomTooltip: React.FC<TooltipProps<any, any> & { currency: string, darkMode: boolean; }> = ({
-  active,
-  payload,
-  label,
-  currency,
-  coordinate,
-  darkMode,
-}) => {
-  if (active && payload && payload.length && coordinate) {
-    const price = payload[0].value as number;
-    const formattedDate = dayjs(label).format('ddd, MMM D H:mm'); // Format ISO date
-    const currencySymbol = currencyIconMap[currency] || '';
-
-    return (
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 10, // Constant Y position near the top
-          left: coordinate.x, // Follow cursor on X-axis
-          transform: 'translateX(-50%)',
-          pointerEvents: 'none',
-          background: 'transparent',
-          fontSize: '0.875rem',
-          textAlign: 'center',
-          width: 'max-content',
-        }}
-      >
-        <Typography variant="body2" component="span" sx={{ color: darkMode ? '#ffffff' : '#303030' }}>
-          {`${currencySymbol}${price.toFixed(2)}`}
-        </Typography>
-        <Typography variant="body2" component="span" sx={{ color: darkMode ? '#a8a8a8' : '#808080' }}>
-          {`\u00A0\u00A0${formattedDate}`}
-        </Typography>
-      </Box>
-    );
-  }
-
-  return null;
-};
-
 const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMini, darkMode }) => {
+  const containerRef = useRef<HTMLDivElement>(null); // Reference to the chart container
+  const [containerWidth, setContainerWidth] = useState<number>(0); // State to store container width
+
+  useEffect(() => {
+    // Measure the container's width on mount and when resized
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.offsetWidth);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+
+    return () => {
+      window.removeEventListener('resize', updateWidth);
+    };
+  }, []);
+
+  // Custom tooltip renderer
+  const CustomTooltip: React.FC<TooltipProps<any, any> & { currency: string, darkMode: boolean; }> = ({
+    active,
+    payload,
+    label,
+    currency,
+    coordinate,
+    darkMode,
+  }) => {
+    const tooltipRef = useRef<HTMLDivElement>(null); // Reference for the tooltip element
+
+    if (active && payload && payload.length && coordinate) {
+      const price = payload[0].value as number;
+      const formattedDate = dayjs(label).format('ddd, MMM D h:mm A'); // Format ISO date to 12-hour time
+      const currencySymbol = currencyIconMap[currency] || '';
+
+      // Dynamically calculate tooltip width
+      const tooltipWidth = tooltipRef.current?.offsetWidth || 200; // Fallback to 200 if not yet rendered
+      const constrainedLeft = Math.max(
+        Math.min(coordinate.x! - (tooltipWidth / 3 - 2), containerWidth - (tooltipWidth + 20)),
+        75 // Ensure it doesn't go beyond the left edge
+      );
+
+      return (
+        <Box
+          ref={tooltipRef} // Attach the ref to the tooltip container
+          sx={{
+            position: 'absolute',
+            top: 10, // Constant Y position near the top
+            left: constrainedLeft, // Centered X position
+            pointerEvents: 'none',
+            background: 'transparent',
+            fontSize: '0.875rem',
+            textAlign: 'center',
+            width: 'max-content',
+          }}
+        >
+          <Typography variant="body2" component="span" sx={{ color: darkMode ? '#ffffff' : '#303030' }}>
+            {`${currencySymbol}${price.toFixed(2)}`}
+          </Typography>
+          <Typography variant="body2" component="span" sx={{ color: darkMode ? '#a8a8a8' : '#808080' }}>
+            {`\u00A0\u00A0${formattedDate}`}
+          </Typography>
+        </Box>
+      );
+    }
+
+    return null;
+  };
+
   // Prepare data for the chart
   const data = labels.map((label, index) => ({
     date: label, // ISO string
@@ -81,7 +109,8 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
 
   // Render the appropriate chart based on the chartType prop
   const renderChart = () => {
-    console.dir(data);
+    const cursorMarginTop = 20; // Margin from the top of the chart for the cursor
+
     switch (chartType) {
       case 'bar':
         return (
@@ -100,7 +129,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
             />
             <Tooltip
               content={<CustomTooltip currency={currency} darkMode={darkMode} />}
-              cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
+              cursor={{ fill: 'rgba(255, 255, 255, 0.1)', y: cursorMarginTop }}
             />
             <Bar dataKey="price" fill={mainColor} />
           </BarChart>
@@ -122,7 +151,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
             />
             <Tooltip
               content={<CustomTooltip currency={currency} darkMode={darkMode} />}
-              cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
+              cursor={{ stroke: '#bcbcbc' }}
             />
             <Area type="monotone" dataKey="price" stroke={mainColor} fill={mainColor} />
           </AreaChart>
@@ -144,7 +173,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
             />
             <Tooltip
               content={<CustomTooltip currency={currency} darkMode={darkMode} />}
-              cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
+              cursor={{ fill: 'rgba(255, 255, 255, 0.1)', y: cursorMarginTop }}
             />
             <Line
               type="monotone"
@@ -159,7 +188,10 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
   };
 
   return (
-    <Box sx={{ width: '100%', aspectRatio: '16/9', minHeight: '80px' }}>
+    <Box
+      ref={containerRef} // Attach the ref to the container
+      sx={{ width: '100%', aspectRatio: '16/9', minHeight: '80px' }}
+    >
       <ResponsiveContainer>
         {renderChart()}
       </ResponsiveContainer>
@@ -168,4 +200,3 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
 };
 
 export default Chart;
-
