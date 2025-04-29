@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import TickerChartContainer from "./components/shared/TickerChartContainer";
 import MiniChartWindow from "./components/electron/MiniChartWindow";
 import { SUPPORTED_CRYPTOS, ChartType, ChartDisplayType } from './constants/globalConsts'; // Import the shared list, ChartType, and ChartDisplayType
+import ThreeDCube from './components/r3f/3DCube'; // Import the new 3D component
 
 if (typeof window !== 'undefined' && typeof window.require === 'undefined' && typeof require !== 'undefined') {
   window.require = require; // Expose require for Electron detection
@@ -56,12 +57,13 @@ root.render(
       <Route path="/account" element={<Account />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/chart/:ticker" element={<TickerChartRoute />} />
+      <Route path="/3d" element={<ThreeDCube />} />
     </Routes>
   </Router>
 );
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-

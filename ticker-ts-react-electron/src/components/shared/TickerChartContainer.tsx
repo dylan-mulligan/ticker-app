@@ -184,7 +184,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
             <Typography>Days to Display</Typography>
             <Slider
               value={localDaysToDisplay}
-              onChange={(event, value) => setDaysToDisplay(value as number)}
+              onChange={(event: any, value: any) => setDaysToDisplay(value as number)}
               min={1}
               max={30}
               valueLabelDisplay="auto"
