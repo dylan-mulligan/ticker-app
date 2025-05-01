@@ -6,8 +6,8 @@ import './css/index.css';
 import reportWebVitals from './reportWebVitals';
 import TickerChartContainer from "./components/shared/TickerChartContainer";
 import MiniChartWindow from "./components/electron/MiniChartWindow";
-import { SUPPORTED_CRYPTOS, ChartType, ChartDisplayType } from './constants/globalConsts'; // Import the shared list, ChartType, and ChartDisplayType
-import ThreeDCube from './components/r3f/3DCube'; // Import the new 3D component
+import { SUPPORTED_CRYPTOS, ChartType, ChartDisplayType } from './constants/globalConsts';
+import ThreeDCube from "./components/r3f/ThreeDCube";
 
 if (typeof window !== 'undefined' && typeof window.require === 'undefined' && typeof require !== 'undefined') {
   window.require = require; // Expose require for Electron detection
@@ -24,7 +24,7 @@ const TickerChartRoute = () => {
   const tight = searchParams.get('tight') === 'true';
 
   if (!ticker || !SUPPORTED_CRYPTOS.includes(ticker.toLowerCase())) {
-    return <div>Error: Unsupported or invalid cryptocurrency ticker.</div>; // Validation
+    return <div>Error: Unsupported or invalid cryptocurrency ticker.</div>;
   }
 
   const isElectron = typeof window !== 'undefined' && (window as any).electronAPI?.isElectron;

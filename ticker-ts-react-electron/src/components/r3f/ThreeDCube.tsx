@@ -1,39 +1,37 @@
 // @ts-nocheck
-import { useRef, Suspense } from 'react'
+import { useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, Edges, MeshPortalMaterial, CameraControls, Environment, PivotControls } from '@react-three/drei'
 import { useControls } from 'leva'
+import path from "path";
 
-//@ts-ignore
 export default function ThreeDCube() {
     return (
         <Canvas shadows camera={{ position: [-3, 0.5, 3] }} style={{height: '100vh', width: '100vw'}}>
-            <Suspense fallback={<mesh><boxGeometry args={[2, 2, 2]} /><meshStandardMaterial color="gray" /></mesh>}>
-                <PivotControls anchor={[-1.1, -1.1, -1.1]} scale={0.75} lineWidth={3.5}>
-                    <mesh castShadow receiveShadow>
-                        <boxGeometry args={[2, 2, 2]} />
-                        <Edges />
-                        <Side rotation={[0, 0, 0]} bg="orange" index={0}>
-                            <torusGeometry args={[0.65, 0.3, 64]} />
-                        </Side>
-                        <Side rotation={[0, Math.PI, 0]} bg="lightblue" index={1}>
-                            <torusKnotGeometry args={[0.55, 0.2, 128, 32]} />
-                        </Side>
-                        <Side rotation={[0, Math.PI / 2, Math.PI / 2]} bg="lightgreen" index={2}>
-                            <boxGeometry args={[1.15, 1.15, 1.15]} />
-                        </Side>
-                        <Side rotation={[0, Math.PI / 2, -Math.PI / 2]} bg="aquamarine" index={3}>
-                            <octahedronGeometry />
-                        </Side>
-                        <Side rotation={[0, -Math.PI / 2, 0]} bg="indianred" index={4}>
-                            <icosahedronGeometry />
-                        </Side>
-                        <Side rotation={[0, Math.PI / 2, 0]} bg="hotpink" index={5}>
-                            <dodecahedronGeometry />
-                        </Side>
-                    </mesh>
-                </PivotControls>
-            </Suspense>
+            <PivotControls anchor={[-1.1, -1.1, -1.1]} scale={0.75} lineWidth={3.5}>
+                <mesh castShadow receiveShadow>
+                    <boxGeometry args={[2, 2, 2]} />
+                    <Edges />
+                    <Side rotation={[0, 0, 0]} bg="orange" index={0}>
+                        <torusGeometry args={[0.65, 0.3, 64]} />
+                    </Side>
+                    <Side rotation={[0, Math.PI, 0]} bg="lightblue" index={1}>
+                        <torusKnotGeometry args={[0.55, 0.2, 128, 32]} />
+                    </Side>
+                    <Side rotation={[0, Math.PI / 2, Math.PI / 2]} bg="lightgreen" index={2}>
+                        <boxGeometry args={[1.15, 1.15, 1.15]} />
+                    </Side>
+                    <Side rotation={[0, Math.PI / 2, -Math.PI / 2]} bg="aquamarine" index={3}>
+                        <octahedronGeometry />
+                    </Side>
+                    <Side rotation={[0, -Math.PI / 2, 0]} bg="indianred" index={4}>
+                        <icosahedronGeometry />
+                    </Side>
+                    <Side rotation={[0, Math.PI / 2, 0]} bg="hotpink" index={5}>
+                        <dodecahedronGeometry />
+                    </Side>
+                </mesh>
+            </PivotControls>
             <CameraControls makeDefault />
         </Canvas>
     )
@@ -46,21 +44,21 @@ function Side({ rotation = [0, 0, 0] as [number, number, number], bg = '#f0f0f0'
     let nodes
     try {
         // Disable MeshoptDecoder to comply with CSP
-        const gltf = useGLTF('/aobox-transformed.glb', false, { useMeshopt: false })
+        const gltf = useGLTF(path.join(__dirname, '/aobox-transformed.js'), true) // Ensure the path is correct
         nodes = gltf.nodes
     } catch (error) {
-        console.error("Failed to load GLTF model:", error)
+        console.error("Failed to load GLTF model. Ensure the file exists at '/aobox-transformed.glb':", error)
         nodes = null // Fallback to avoid breaking the app
     }
 
     useFrame((state, delta) => {
         if (mesh.current) {
-            //@ts-ignore
             mesh.current.rotation.x = mesh.current.rotation.y += delta
         }
     })
 
-    if (!nodes) {
+    if (!nodes || !nodes.Cube) {
+        console.warn("GLTF model is missing or corrupted. Rendering fallback geometry.")
         return (
             <mesh>
                 <boxGeometry args={[1, 1, 1]} />
@@ -91,3 +89,4 @@ function Side({ rotation = [0, 0, 0] as [number, number, number], bg = '#f0f0f0'
         </MeshPortalMaterial>
     )
 }
+
