@@ -44,7 +44,7 @@ function createWindow() {
 
     mainWindow.loadURL(
         process.env.ELECTRON_START_URL ||
-        `file://${path.join(__dirname, 'build', 'index.html')}`
+        `file://${path.join('build', 'index.html')}`
     );
 
     mainWindow.on('resized', saveWindowBounds); // Save bounds on window moved
