@@ -64,6 +64,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [chartType, setChartType] = useState<ChartType>(initialChartType);
   const [localDaysToDisplay, setDaysToDisplay] = useState<number>(daysToDisplay);
+  const [fullData, setFullData] = useState<{ labels: string[]; prices: number[] }>({ labels: [], prices: [] });
 
   const isMini = displayType === 'mini-electron' || displayType === 'mini-browser';
   const client = displayType.split('-')[1];
@@ -73,7 +74,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
     setChartType((prevType) => (prevType === 'line' ? 'bar' : prevType === 'bar' ? 'area' : 'line'));
   };
 
-  // Fetch chart data from the API
+  // Fetch chart data from the API (once)
   const fetchChartData = async () => {
     const days = 30; // Total days to query from the API
 
@@ -83,31 +84,37 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
       });
       const data = response.data;
 
-      // Get the timestamp for `localDaysToDisplay` days ago
-      const nDaysAgo = new Date();
-      nDaysAgo.setDate(nDaysAgo.getDate() - localDaysToDisplay);
-      const nDaysAgoTimestamp = nDaysAgo.getTime();
+      // Map full data to labels and prices
+      const allLabels = data.prices.map((price: [number, number]) => new Date(price[0]).toISOString());
+      const allPrices = data.prices.map((price: [number, number]) => price[1]);
 
-      // Filter data for the last `localDaysToDisplay` days
-      const filteredData = data.prices.filter(
-        (price: [number, number]) => price[0] >= nDaysAgoTimestamp
-      );
+      setFullData({ labels: allLabels, prices: allPrices });
+      setCurrentPrice(allPrices[allPrices.length - 1]);
 
-      // Map filtered data to labels and prices
-      const newLabels = filteredData.map((price: [number, number]) =>
-        new Date(price[0]).toISOString()
-      );
-      const newPrices = filteredData.map((price: [number, number]) => price[1]);
-
-      setLabels(newLabels);
-      setPrices(newPrices);
-      setCurrentPrice(newPrices[newPrices.length - 1]);
+      // Initialize displayed data based on `localDaysToDisplay`
+      updateDisplayedData(allLabels, allPrices, localDaysToDisplay);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
-  // Fetch data when the component mounts or dependencies change
+  // Update displayed data based on `localDaysToDisplay`
+  const updateDisplayedData = (allLabels: string[], allPrices: number[], days: number) => {
+    const nDaysAgoIndex = allLabels.findIndex((label) => {
+      const date = new Date(label);
+      const nDaysAgo = new Date();
+      nDaysAgo.setDate(nDaysAgo.getDate() - days);
+      return date >= nDaysAgo;
+    });
+
+    const filteredLabels = allLabels.slice(nDaysAgoIndex);
+    const filteredPrices = allPrices.slice(nDaysAgoIndex);
+
+    setLabels(filteredLabels);
+    setPrices(filteredPrices);
+  };
+
+  // Fetch data once when the component mounts
   useEffect(() => {
     if (!fetchData) return;
 
@@ -119,10 +126,10 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
     processQueue();
   }, [ticker, currency, fetchData]);
 
-  // Update chart when `localDaysToDisplay` changes
+  // Update displayed data when `localDaysToDisplay` changes
   useEffect(() => {
-    fetchChartData();
-  }, [localDaysToDisplay]);
+    updateDisplayedData(fullData.labels, fullData.prices, localDaysToDisplay);
+  }, [localDaysToDisplay, fullData]);
 
   const handleRangeChange = (days: number) => {
     setDaysToDisplay(days);
