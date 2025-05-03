@@ -39,14 +39,14 @@ const processQueue = async () => {
 };
 
 // Get the appropriate cryptocurrency icon based on the ticker
-const getCryptoIcon = (ticker: string) => {
+const getCryptoIcon = (ticker: string, size = 28) => {
   switch (ticker.toLowerCase()) {
     case 'bitcoin':
-      return <IconCurrencyBitcoin size={28} />;
+      return <IconCurrencyBitcoin size={size} />;
     case 'ethereum':
-      return <IconCurrencyEthereum size={28} />;
+      return <IconCurrencyEthereum size={size} />;
     default:
-      return <IconCurrencyDogecoin size={28} />;
+      return <IconCurrencyDogecoin size={size} />;
   }
 };
 
@@ -141,14 +141,15 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
       sx={{
         border: '1px solid #ccc',
         borderRadius: '8px',
-        boxShadow: client === 'browser' ? 'none' : '0 4px 8px rgba(0, 0, 0, 0.15)',
-        p: isMini ? 1 : 3,
+        boxShadow: (isMini || client === 'browser') ? 'none' : '0 4px 8px rgba(0, 0, 0, 0.15)',
+        p: isMini ? 1 : 2,
         width: 'auto',
+        minWidth: isMini ? 'auto' : 700,
         height: (isMini && client === 'electron') ? 'calc(100vh - 50px)' : 'auto',
         backgroundColor: isMini ? (client === 'electron' ? 'rgba(161,161,161,0.35)' : '#ffffff') : 'transparent',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: isMini ? 'space-between' : 'flex-start',
+        justifyContent: 'center',
         margin: client === 'browser' ? 0 : 'inherit',
       }}
     >
@@ -156,28 +157,27 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'flex-start',
+          justifyContent: isMini ? 'flex-start' : 'space-between',
           gap: isMini ? 1 : 2,
-          alignItems: isMini ? 'center' : 'flex-start',
+          alignItems: 'center',
           pl: isMini ? 1 : 0,
           pr: isMini ? 1 : 0,
           mb: 0.5,
         }}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', alignSelf: isMini ? undefined : 'flex-start' }}>
           <Typography
             variant={isMini ? 'subtitle1' : 'h6'}
             sx={{
-              textAlign: 'center',
               display: 'flex',
               alignItems: 'center',
               gap: 1,
-              marginBottom: isMini ? 0 : 2,
               width: 'max-content',
-              color: getTickerColor(ticker, (darkMode || client === 'browser')),
+              height: '100%',
+              color: getTickerColor(ticker, (darkMode || client === 'browser'))
             }}
           >
-            {getCryptoIcon(ticker)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
+            {getCryptoIcon(ticker, 24)} {ticker.toUpperCase() + " (" + currency.toUpperCase() + ")"}
           </Typography>
         </Box>
         <PriceDisplay
@@ -187,7 +187,7 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
           isMini={isMini}
         />
         {!isMini ? (
-          <Box sx={{ width: 175, marginTop: 0.5 }}>
+          <Box sx={{ width: 150, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Typography>Days to Display</Typography>
             <Slider
               value={localDaysToDisplay}
@@ -211,10 +211,11 @@ const TickerChartContainer: React.FC<TickerChartContainerProps> = ({
             variant="contained"
             onClick={cycleChartType}
             sx={{
-              marginBottom: isMini ? 0 : 2,
+              marginBottom: 0,
               borderRadius: 2,
               padding: isMini ? '4px' : '8px',
-              minWidth: isMini ? 'auto' : undefined,
+              minWidth: isMini ? 'auto' : '50px',
+              minHeight: isMini ? 'auto' : '50px',
             }}
           >
             {getChartIcon(chartType, 24)}

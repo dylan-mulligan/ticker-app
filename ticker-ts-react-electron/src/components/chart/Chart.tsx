@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Box, useTheme, Typography } from '@mui/material';
 import {
-  LineChart, Line, XAxis, YAxis, Tooltip,
-  CartesianGrid, ResponsiveContainer,
-  BarChart, Bar, AreaChart, Area,
-  TooltipProps,
+    LineChart, Line, XAxis, YAxis, Tooltip,
+    CartesianGrid, ResponsiveContainer,
+    BarChart, Bar, AreaChart, Area,
+    TooltipProps, ReferenceLine,
 } from 'recharts';
 import { currencyIconMap } from '../../utils/currencyIconMap';
 import { ChartType } from '../../constants/globalConsts';
@@ -53,14 +53,14 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
 
     if (active && payload && payload.length && coordinate) {
       const price = payload[0].value as number;
-      const formattedDate = dayjs(label).format('ddd, MMM D h:mm A'); // Format ISO date to readable format
+      const formattedDate = dayjs(label).format('ddd, MMM D h:mm A');
       const currencySymbol = currencyIconMap[currency] || '';
 
       // Dynamically calculate tooltip width
       const tooltipWidth = tooltipRef.current?.offsetWidth || 200; // Default to 200 if not rendered yet
       const constrainedLeft = Math.max(
         Math.min(coordinate.x! - (tooltipWidth / 3 - 2), containerWidth - (tooltipWidth + 20)),
-        75 // Ensure tooltip doesn't go beyond the left edge
+        90
       );
 
       return (
@@ -108,6 +108,9 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
   const isPriceIncreasing = prices[prices.length - 1] >= prices[0];
   const mainColor = isPriceIncreasing ? '#4caf50' : '#f44336';
 
+  // Get the initial value of the dataset
+  const initialValue = prices[0];
+
   // Render the appropriate chart based on the `chartType` prop
   const renderChart = () => {
     const cursorMarginTop = 20; // Margin from the top of the chart for the cursor
@@ -124,6 +127,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               interval={interval}
             />
             <YAxis
+              width={75}
               domain={['auto', 'auto']}
               tickFormatter={(value) => `${currencyIconMap[currency] || ''}${value}`}
               stroke={axisLabelColor}
@@ -133,6 +137,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               cursor={{ fill: 'rgba(255, 255, 255, 0.1)', y: cursorMarginTop }}
             />
             <Bar dataKey="price" fill={mainColor} />
+            {/*<ReferenceLine y={initialValue} label="Starting Price" stroke="red" strokeDasharray="3 3" />*/}
           </BarChart>
         );
       case 'area':
@@ -146,6 +151,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               interval={interval}
             />
             <YAxis
+              width={75}
               domain={['auto', 'auto']}
               tickFormatter={(value) => `${currencyIconMap[currency] || ''}${value}`}
               stroke={axisLabelColor}
@@ -155,6 +161,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               cursor={{ stroke: '#bcbcbc' }}
             />
             <Area type="monotone" dataKey="price" stroke={mainColor} fill={mainColor} />
+            {/*<ReferenceLine y={initialValue} label="Starting Price" stroke="red" strokeDasharray="3 3" />*/}
           </AreaChart>
         );
       default:
@@ -168,6 +175,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               interval={interval}
             />
             <YAxis
+              width={75}
               domain={['auto', 'auto']}
               tickFormatter={(value) => `${currencyIconMap[currency] || ''}${value}`}
               stroke={axisLabelColor}
@@ -183,6 +191,7 @@ const Chart: React.FC<ChartProps> = ({ currency, labels, prices, chartType, isMi
               strokeWidth={2.5}
               dot={{ r: 0 }}
             />
+            {/*<ReferenceLine y={initialValue} label="Starting Price" stroke="red" strokeDasharray="3 3" />*/}
           </LineChart>
         );
     }

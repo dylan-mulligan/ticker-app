@@ -18,14 +18,14 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({ ticker, currentPrice, curre
       id={`price-${ticker}`}
       sx={{
         display: 'flex',
-        flexDirection: 'column', // Stack vertically in mini mode
+        flexDirection: 'column',
         alignItems: 'center',
         pt: isMini ? .4 : 0,
       }}
     >
         {!isMini && (
-            <Typography variant="h6" component="div" sx={{ width: 'max-content' }}>
-                Current Price:
+            <Typography variant="subtitle1" sx={{ width: 'max-content', pb: isMini ? 0 : .25, }}>
+                Current Price
             </Typography>
         )}
       <Typography component="span" sx={{ fontWeight: 'bold', color: '#33ac21' }}>

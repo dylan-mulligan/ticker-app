@@ -96,7 +96,7 @@ const ChartSelectionBox: React.FC<ChartSelectionBoxProps> = ({
         borderRadius: '8px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
         p: 3,
-        maxWidth: 670,
+        maxWidth: 700,
         margin: '0 auto',
         mb: 4,
       }}

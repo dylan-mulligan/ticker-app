@@ -117,7 +117,7 @@ function App() {
           sx={{
             flex: 1,
             overflowY: 'auto', // Enable scrolling for the body content
-            padding: 2,
+            p: 2,
           }}
         >
           <ChartSelectionBox
