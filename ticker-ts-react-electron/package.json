@@ -31,7 +31,7 @@
     "react-start": "vite",
     "electron-start": "set \"ELECTRON_START_URL=http://localhost:5173\"&& electron .",
     "start": "concurrently \"npm run react-start\" \"npm run electron-start\"",
-    "build": "vite build public --outDir build",
+    "build": "vite build",
     "build:electron": "tsc -p tsconfig.electron.json",
     "dist": "npm run build && npm run build:electron && electron-builder --win",
     "serve": "electron .",
