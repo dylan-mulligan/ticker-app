@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
+import { currencyIconMap } from '../../utils/currencyIconMap'; // Import currencyIconMap
 
 interface PriceDisplayProps {
   ticker: string;
@@ -9,8 +10,8 @@ interface PriceDisplayProps {
 }
 
 const PriceDisplay: React.FC<PriceDisplayProps> = ({ ticker, currentPrice, currency, isMini = false }) => {
-  // Determine the currency symbol based on the selected currency
-  const currencySymbol = currency === 'usd' ? '$' : currency === 'eur' ? '€' : '';
+  // Use currencyIconMap to determine the currency symbol
+  const currencySymbol = currencyIconMap[currency] || '';
 
   return (
     <Box
