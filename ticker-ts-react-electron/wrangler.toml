@@ -1,4 +1,5 @@
 name = "ticker-app"
+main = "dist/index.js"
 compatibility_date = "2025-01-01"
 
 [build]
