@@ -4,8 +4,10 @@ const qs = require('querystring');
 const { buildNonce, buildHeaders } = require('./krakenApiUtils');
 
 /**
- * Get open orders from Kraken API
+ * Get open orders from Kraken API.
+ *
  * @param {Object} options - Optional parameters (e.g., { trades: true, userref: 123 })
+ * @returns {Promise<void>} Prints the API response or error to the console.
  */
 async function getOpenOrders(options = {}) {
   const urlPath = '/0/private/OpenOrders';
@@ -16,10 +18,12 @@ async function getOpenOrders(options = {}) {
   const headers = buildHeaders(urlPath, postData);
 
   try {
+    // Send POST request to Kraken API for open orders
     const response = await axios.post(apiUrl, postBody, { headers });
     console.log(response.data);
     console.log('Response Code:', response.status);
   } catch (err) {
+    // Log error details
     console.error('Error:', err.response ? err.response.data : err.message);
   }
 }

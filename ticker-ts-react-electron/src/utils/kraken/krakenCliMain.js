@@ -1,3 +1,18 @@
+/**
+ * CLI utility for interacting with the Kraken API.
+ * Provides a menu to perform various account and trading operations via the command line.
+ *
+ * @module krakenCliMain
+ * @requires ./loadKrakenEnv
+ * @requires readline
+ * @requires ./krakenApiSign
+ * @requires ./krakenTradeBalance
+ * @requires ./krakenOpenOrders
+ * @requires ./krakenClosedOrders
+ * @requires ./krakenOrdersInfo
+ * @requires ./krakenTradeHistory
+ * @requires ./krakenTradeVolume
+ */
 require('./loadKrakenEnv');
 const readline = require('readline');
 const { getAccountBalance } = require('./krakenApiSign');
@@ -13,6 +28,13 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+/**
+ * Displays the main menu and handles user input for Kraken API operations.
+ * Calls the appropriate function based on user selection.
+ *
+ * @function showMenu
+ * @returns {void}
+ */
 function showMenu() {
   console.log('\nSelect Kraken API call:');
   console.log('1: Get Account Balance');
