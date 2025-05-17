@@ -1,13 +1,17 @@
-require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.env') });
+require('./loadKrakenEnv');
 const axios = require('axios');
 const qs = require('querystring');
 const { buildNonce, buildHeaders } = require('./krakenApiUtils');
 
-async function getAccountBalance() {
-  const urlPath = '/0/private/Balance';
+/**
+ * Get open orders from Kraken API
+ * @param {Object} options - Optional parameters (e.g., { trades: true, userref: 123 })
+ */
+async function getOpenOrders(options = {}) {
+  const urlPath = '/0/private/OpenOrders';
   const apiUrl = `https://api.kraken.com${urlPath}`;
   const nonce = buildNonce();
-  const postData = { nonce };
+  const postData = { nonce, ...options };
   const postBody = qs.stringify(postData);
   const headers = buildHeaders(urlPath, postData);
 
@@ -20,4 +24,5 @@ async function getAccountBalance() {
   }
 }
 
-module.exports = { getAccountBalance };
+module.exports = { getOpenOrders };
+

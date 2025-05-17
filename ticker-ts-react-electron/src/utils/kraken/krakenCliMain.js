@@ -1,7 +1,8 @@
-require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.env') });
+require('./loadKrakenEnv');
 const readline = require('readline');
-const { getAccountBalance } = require('./KrakenApiSign');
-const { getTradeBalance } = require('./KrakenTradeBalance');
+const { getAccountBalance } = require('./krakenApiSign');
+const { getTradeBalance } = require('./krakenTradeBalance');
+const { getOpenOrders } = require('./krakenOpenOrders');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -13,9 +14,10 @@ function showMenu() {
   console.log('1: Get Account Balance');
   console.log('2: Get Trade Balance (ZUSD)');
   console.log('3: Get Trade Balance (custom asset)');
+  console.log('4: Get Open Orders');
   console.log('0: Exit');
 
-  rl.question('Enter your choice (0/1/2/3): ', async (answer) => {
+  rl.question('Enter your choice (0/1/2/3/4): ', async (answer) => {
     switch (answer.trim()) {
       case '1':
         await getAccountBalance();
@@ -30,6 +32,10 @@ function showMenu() {
           await getTradeBalance(asset.trim());
           showMenu();
         });
+        break;
+      case '4':
+        await getOpenOrders();
+        showMenu();
         break;
       case '0':
         rl.close();

@@ -1,13 +1,13 @@
-require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.env') });
+require('./loadKrakenEnv');
 const axios = require('axios');
 const qs = require('querystring');
 const { buildNonce, buildHeaders } = require('./krakenApiUtils');
 
-async function getTradeBalance(asset = 'ZUSD') {
-  const urlPath = '/0/private/TradeBalance';
+async function getAccountBalance() {
+  const urlPath = '/0/private/Balance';
   const apiUrl = `https://api.kraken.com${urlPath}`;
   const nonce = buildNonce();
-  const postData = { nonce, asset };
+  const postData = { nonce };
   const postBody = qs.stringify(postData);
   const headers = buildHeaders(urlPath, postData);
 
@@ -20,4 +20,4 @@ async function getTradeBalance(asset = 'ZUSD') {
   }
 }
 
-module.exports = { getTradeBalance };
+module.exports = { getAccountBalance };
