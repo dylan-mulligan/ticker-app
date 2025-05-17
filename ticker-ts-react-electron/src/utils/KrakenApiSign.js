@@ -1,28 +1,50 @@
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 const crypto = require('crypto');
+const axios = require('axios');
 const qs = require('querystring');
 
-// Use environment variable for API secret
-const API_SECRET = process.env.KRAKEN_API_SECRET; // base64-encoded
-const urlPath = '/0/private/Balance';
-const nonce = Date.now() * 1000; // Kraken expects a big nonce
-const postData = {
-  nonce: nonce.toString()
-};
+const API_KEY = process.env.KRAKEN_API_KEY;
+const API_SECRET = process.env.KRAKEN_API_SECRET;
 
-// Step 1: Encode post data
-const postBody = qs.stringify(postData);
+if (!API_KEY || !API_SECRET) {
+  console.error('Error: KRAKEN_API_KEY and/or KRAKEN_API_SECRET are not set in the environment or .env file.');
+  process.exit(1);
+}
 
-// Step 2: SHA256(nonce + POST data)
-const hashDigest = crypto.createHash('sha256')
+async function getAccountBalance() {
+  const urlPath = '/0/private/Balance';
+  const apiUrl = `https://api.kraken.com${urlPath}`;
+  const nonce = Date.now() * 1000;
+
+  const postData = { nonce: nonce.toString() };
+  const postBody = qs.stringify(postData);
+
+  // Step 1: SHA256(nonce + POST data)
+  const hashDigest = crypto.createHash('sha256')
     .update(nonce + postBody)
     .digest();
 
-// Step 3: HMAC-SHA512(path + hashDigest)
-const hmac = crypto.createHmac('sha512', Buffer.from(API_SECRET, 'base64'));
-const signature = hmac.update(urlPath + hashDigest).digest('base64');
+  // Step 2: HMAC-SHA512(path + hashDigest)
+  const hmac = crypto.createHmac('sha512', Buffer.from(API_SECRET, 'base64'));
+  const what = Buffer.concat([
+    Buffer.from(urlPath),
+    hashDigest
+  ]);
+  const signature = hmac.update(what).digest('base64');
 
-// Output results
-console.log('Nonce:', nonce);
-console.log('Post Body:', postBody);
-console.log('API-Sign:', signature);
+  const headers = {
+    'API-Key': API_KEY,
+    'API-Sign': signature,
+    'Content-Type': 'application/x-www-form-urlencoded'
+  };
 
+  try {
+    const response = await axios.post(apiUrl, postBody, { headers });
+    console.log(response.data);
+    console.log('Response Code:', response.status);
+  } catch (err) {
+    console.error('Error:', err.response ? err.response.data : err.message);
+  }
+}
+
+getAccountBalance();
