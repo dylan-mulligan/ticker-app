@@ -4,6 +4,8 @@ const { getAccountBalance } = require('./krakenApiSign');
 const { getTradeBalance } = require('./krakenTradeBalance');
 const { getOpenOrders } = require('./krakenOpenOrders');
 const { getClosedOrders } = require('./krakenClosedOrders');
+const { getOrdersInfo } = require('./krakenOrdersInfo');
+const { getTradeHistory } = require('./krakenTradeHistory');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -17,9 +19,11 @@ function showMenu() {
   console.log('3: Get Trade Balance (custom asset)');
   console.log('4: Get Open Orders');
   console.log('5: Get Closed Orders');
+  console.log('6: Get Orders Info (by txid)');
+  console.log('7: Get Trade History');
   console.log('0: Exit');
 
-  rl.question('Enter your choice (0/1/2/3/4/5): ', async (answer) => {
+  rl.question('Enter your choice: ', async (answer) => {
     switch (answer.trim()) {
       case '1':
         await getAccountBalance();
@@ -41,6 +45,21 @@ function showMenu() {
         break;
       case '5':
         await getClosedOrders();
+        showMenu();
+        break;
+      case '6':
+        rl.question('Enter txid(s) (comma separated for multiple): ', async (txid) => {
+          if (!txid.trim()) {
+            console.log('txid is required.');
+            showMenu();
+            return;
+          }
+          await getOrdersInfo({ txid: txid.trim() });
+          showMenu();
+        });
+        break;
+      case '7':
+        await getTradeHistory();
         showMenu();
         break;
       case '0':
